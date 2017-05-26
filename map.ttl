@@ -1,0 +1,19 @@
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+@prefix ngeo: <http://geovocab.org/geometry#> .
+@prefix lgd: <http://linkedgeodata.org/ontology/> .
+
+ex:Bakery1 rdf:type lgd:Bakery .
+ex:Bakery1 rdf:type ngeo:LineString .
+ex:Bakery1 ex:hasColor ex:Red .
+ex:Bakery1 ngeo:posList _:blank.
+_:blank geo:lat "-34.622148"; 
+    geo:long "-58.380603".
+
+ex:Bakery2 rdf:type lgd:Bakery .
+ex:Bakery2 rdf:type ngeo:LineString .
+ex:Bakery2 ex:hasColor ex:Red .
+ex:Bakery2 ngeo:posList _:blank.
+_:blank geo:lat "-34.622148"; 
+    geo:long "-58.380603".
