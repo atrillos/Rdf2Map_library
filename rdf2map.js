@@ -1,6 +1,5 @@
 (function(window) {
   'use strict'
-
   // Library Definition
   function defineRDF2Map(){
 
@@ -16,6 +15,8 @@
                     {\
                       ?subject ?property ?object\
                     }`
+
+    var RDF2Map = {};
 
     RDF2Map.loadRDF = function (fileInputId){
       //read ttl file
@@ -83,11 +84,7 @@
     return RDF2Map;
   }
 
-  if (typeof(RDF2Map) === undefined) {
+  if (typeof(RDF2Map) === 'undefined') {
     window.RDF2Map = defineRDF2Map();
   }
-});
-
-
-
-
+})(window);

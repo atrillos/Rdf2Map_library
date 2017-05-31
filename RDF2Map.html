@@ -1,11 +1,14 @@
 <html>
 <head>
-	
+	<script type="text/javascript" src="rdfstore.js"></script>
+	<script type="text/javascript" src="rdf2map.js"></script>
 </head>
 
 <body>	
 	<input type='file' id='file'>
-    <script type="text/javascript" src="rdfstore.js"></script>
-	<script type="text/javascript" src="rdf2map.js"></script>
+
+	<script>
+		RDF2Map.loadRDF('file');
+	</script>
 </body>
 </html>
