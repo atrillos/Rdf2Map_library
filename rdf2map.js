@@ -16,6 +16,20 @@
                       ?subject ?property ?object\
                     }`
 
+    // THIS QUERY IS NOT CORRECT!!!
+    var queryString2 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                    PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                    PREFIX ex: <http://example.org/>  \
+                    PREFIX ngeo: <http://geovocab.org/geometry#> \
+                    PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                    \
+                    SELECT ?lat ?long\
+                    WHERE \
+                    {\
+                      ?place ngeo:posList ?posList.\
+                      ?posList geo:lat ?lat.\
+                      ?posList geo:long ?long.\
+                    }` 
     var RDF2Map = {};
 
     RDF2Map.loadRDF = function (fileInputId){
@@ -44,7 +58,19 @@
             logger.error("Could not Run SPARQL Query:", err.message);
           } else {
             // run query
-            store.execute(queryString, function(err, results) {
+            store.execute(queryString2, function(err, results) {
+              mymap.remove();
+              var newMap = L.map('mapid').setView([results[0]['lat'].value, results[0]['long'].value], 13);
+
+              L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                  '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                  'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                id: 'mapbox.streets'
+              }).addTo(newMap);
+
+              var marker = L.marker([results[0].lat.value, results[0].long.value]).addTo(newMap);
               // build first row
               var listOfSelects = Object.keys(results[0]);
              
