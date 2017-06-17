@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/atrillos/Rdf2Map_library/issues"
   },
-  "homepage": "https://github.com/atrillos/Rdf2Map_library#readme"
+  "homepage": "https://github.com/atrillos/Rdf2Map_library#readme",
+  "dependencies": {
+    "hapi": "^16.4.3",
+    "inert": "^4.2.0"
+  }
 }
