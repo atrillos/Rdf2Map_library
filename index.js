@@ -8,7 +8,7 @@ var config = {};
 var server = new hapi.Server(config);
 const portToUse = process.env.PORT || 5000;
 console.log(portToUse);
-server.connection({ port: portToUse, host: 'localhost' });
+server.connection({ port: ~~process.env.PORT || 5000, host: 'localhost' });
 server.register([Inert], (err) => {
 
     if (err) {
