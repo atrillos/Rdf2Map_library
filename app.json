@@ -1,0 +1,7 @@
+{
+  "name": "RDF2Map Demo",
+  "description": "Demo for the RDF2Map Library",
+  "repository": "https://github.com/atrillos/Rdf2Map_library",
+  "keywords": ["Maps", "RDF", "Javascript"],
+  "image": "heroku/nodejs"
+}
