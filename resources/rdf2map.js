@@ -77,8 +77,11 @@
                   'Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 id: 'mapbox.streets'
               }).addTo(RDF2Map.map);
+
+              let markers = [];
               for(let i = 0; i < results.length; i++){
                 let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(results[i].name.value);
+                markers.push(marker);
                 // build first row
                 let listOfSelects = Object.keys(results[0]);
                
@@ -94,6 +97,11 @@
                 console.log(firstRow);
                 //resultTable.append(firstRow); 
               }
+
+              // Create a marker group with all the markers
+              let markerGroup = new L.featureGroup(markers);
+              // Fit the map to the markers bounds.
+              RDF2Map.map.fitBounds(markerGroup.getBounds());
               printResults(results);
             });
           }
