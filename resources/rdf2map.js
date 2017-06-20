@@ -98,10 +98,13 @@
                 //resultTable.append(firstRow); 
               }
 
-              // Create a marker group with all the markers
-              let markerGroup = new L.featureGroup(markers);
-              // Fit the map to the markers bounds.
-              RDF2Map.map.fitBounds(markerGroup.getBounds());
+              if (markers.length > 1) {
+                // Create a marker group with all the markers
+                let markerGroup = new L.featureGroup(markers);
+                // Fit the map to the markers bounds.
+                RDF2Map.map.fitBounds(markerGroup.getBounds());  
+              }
+              
               printResults(results);
             });
           }
