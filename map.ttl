@@ -12,9 +12,23 @@ ex:Station1 ngeo:posList _:blank.
 _:blank geo:lat "50.7323"; 
     geo:long "7.0970".
 
+ex:Station2 rdf:type lgd:Station .
+ex:Station2 dcterms:title "Bertha-von-Suttner-Platz (Bonn)".
+ex:Station2 rdf:type geo:Point .
+ex:Station2 ngeo:posList _:blank2.
+_:blank2 geo:lat "50.737416"; 
+    geo:long "7.102456".
+
+ex:Station3 rdf:type lgd:Station .
+ex:Station3 dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz".
+ex:Station3 rdf:type geo:Point .
+ex:Station3 ngeo:posList _:blank3.
+_:blank3 geo:lat "50.739649"; 
+    geo:long "7.11829".
+
 ex:Museum1 rdf:type lgd:Museum .
 ex:Museum1 dcterms:title "Beethoven-Haus Bonn".
 ex:Museum1 rdf:type geo:Point .
-ex:Museum1 ngeo:posList _:blank2.
-_:blank2 geo:lat "50.7369"; 
+ex:Museum1 ngeo:posList _:blank4.
+_:blank4 geo:lat "50.7369"; 
     geo:long "7.1012".
