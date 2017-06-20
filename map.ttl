@@ -4,16 +4,14 @@
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
 
-ex:Bakery1 rdf:type lgd:Bakery .
-ex:Bakery1 rdf:type ngeo:LineString .
-ex:Bakery1 ex:hasColor ex:Red .
-ex:Bakery1 ngeo:posList _:blank.
-_:blank geo:lat "10.500000"; 
-    geo:long "-66.916664".
+ex:Station1 rdf:type lgd:Station .
+ex:Station1 rdf:type geo:Point .
+ex:Station1 ngeo:posList _:blank.
+_:blank geo:lat "50.7323"; 
+    geo:long "7.0970".
 
-ex:Bakery2 rdf:type lgd:Bakery .
-ex:Bakery2 rdf:type ngeo:LineString .
-ex:Bakery2 ex:hasColor ex:Red .
-ex:Bakery2 ngeo:posList _:blank2.
-_:blank2 geo:lat "-34.622148"; 
-    geo:long "-58.380603".
+ex:Museum1 rdf:type lgd:Museum .
+ex:Museum1 rdf:type geo:Point .
+ex:Museum1 ngeo:posList _:blank2.
+_:blank2 geo:lat "50.7369"; 
+    geo:long "7.1012".
