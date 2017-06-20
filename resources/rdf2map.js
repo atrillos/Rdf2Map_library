@@ -3,50 +3,23 @@
   // Library Definition
   function defineRDF2Map(){
 
-    // initialize
-    let queryString = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                    PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                    PREFIX ex: <http://example.org/>  \
-                    PREFIX ngeo: <http://geovocab.org/geometry#> \
-                    PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                    PREFIX dcterms: <http://purl.org/dc/terms/>\
-                    \
-                    SELECT ?name ?lat ?long\
-                    WHERE \
-                    {\
-                      ?subject rdf:type geo:Point;
-                      dcterms:title ?name;\
-                      ngeo:posList ?position.\
-                      ?position geo:lat ?lat;\
-                      geo:long ?long.\
-                    }`
+    // initialize    
+    let RDF2Map = {
+      vocabulary: null,
+      map: null
+    };
 
-    // THIS QUERY IS NOT CORRECT!!!
-    let queryString2 = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                    PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                    PREFIX ex: <http://example.org/>  \
-                    PREFIX ngeo: <http://geovocab.org/geometry#> \
-                    PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                    \
-                    SELECT ?lat ?long\
-                    WHERE \
-                    {\
-                      ?place ngeo:posList ?posList.\
-                      ?posList geo:lat ?lat.\
-                      ?posList geo:long ?long.\
-                    }` 
-    let RDF2Map = {};
-
-    RDF2Map.loadRDF = function (fileInputId){
+    RDF2Map.loadRDF = function (fileInputId, map) {
+      RDF2Map.map = map;
       //read ttl file
-      document.getElementById(fileInputId).onchange = function(){
+      document.getElementById(fileInputId).onchange = function() {
         let file = this.files[0];
         let reader = new FileReader();
         reader.onload = function(progressEvent){
           // Entire file
-          var vocabulary = this.result;
+          this.vocabulary = this.result;
+          addLocationPoints(this.vocabulary);
 
-          begin(vocabulary);
         };  
         reader.readAsText(file);
       };      
@@ -65,7 +38,24 @@
       }
     }
 
-    function begin(vocabulary){
+    function addLocationPoints(vocabulary) {
+
+      let queryString = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                \
+                SELECT ?name ?lat ?long\
+                WHERE \
+                {\
+                  ?subject rdf:type geo:Point;
+                  dcterms:title ?name;\
+                  ngeo:posList ?position.\
+                  ?position geo:lat ?lat;\
+                  geo:long ?long.\
+                }`
 
       // create graph store
       rdfstore.create(function(err, store) {
@@ -75,20 +65,20 @@
             logger.error("Could not Run SPARQL Query:", err.message);
           } else {
             // run query
-            store.execute(queryString, function(err, results) {
-              mymap.remove();
-              let newMap = L.map('mapid').setView([results[0]['lat'].value, results[0]['long'].value], 13);
+            store.execute(queryString, function (err, results) {
+              let mapid = RDF2Map.map._container.id;
+              RDF2Map.map.remove();
+              RDF2Map.map = L.map(mapid).setView([results[0]['lat'].value, results[0]['long'].value], 13);
 
               L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-                maxZoom: 18,
+                maxZoom: 50,
                 attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                   '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                   'Imagery © <a href="http://mapbox.com">Mapbox</a>',
                 id: 'mapbox.streets'
-              }).addTo(newMap);
-
+              }).addTo(RDF2Map.map);
               for(let i = 0; i < results.length; i++){
-                let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(newMap).bindPopup(results[i].name.value);
+                let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(results[i].name.value);
                 // build first row
                 let listOfSelects = Object.keys(results[0]);
                
