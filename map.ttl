@@ -3,14 +3,17 @@
 @prefix ex: <http://example.org/> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
+@prefix dcterms: <http://purl.org/dc/terms/>.
 
 ex:Station1 rdf:type lgd:Station .
+ex:Station1 dcterms:title "Bonn Hauptbahnhof".
 ex:Station1 rdf:type geo:Point .
 ex:Station1 ngeo:posList _:blank.
 _:blank geo:lat "50.7323"; 
     geo:long "7.0970".
 
 ex:Museum1 rdf:type lgd:Museum .
+ex:Museum1 dcterms:title "Beethoven-Haus Bonn".
 ex:Museum1 rdf:type geo:Point .
 ex:Museum1 ngeo:posList _:blank2.
 _:blank2 geo:lat "50.7369"; 
