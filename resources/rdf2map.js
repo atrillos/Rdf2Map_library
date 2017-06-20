@@ -10,10 +10,13 @@
                     PREFIX ngeo: <http://geovocab.org/geometry#> \
                     PREFIX lgd: <http://linkedgeodata.org/ontology/> \
                     \
-                    SELECT ?subject ?property ?object\
+                    SELECT ?subject ?lat ?long\
                     WHERE \
                     {\
-                      ?subject ?property ?object\
+                      ?subject rdf:type geo:Point;
+                      ngeo:posList ?position.\
+                      ?position geo:lat ?lat;\
+                      geo:long ?long.\
                     }`
 
     // THIS QUERY IS NOT CORRECT!!!
@@ -70,7 +73,7 @@
             logger.error("Could not Run SPARQL Query:", err.message);
           } else {
             // run query
-            store.execute(queryString2, function(err, results) {
+            store.execute(queryString, function(err, results) {
               mymap.remove();
               let newMap = L.map('mapid').setView([results[0]['lat'].value, results[0]['long'].value], 13);
 
@@ -82,22 +85,23 @@
                 id: 'mapbox.streets'
               }).addTo(newMap);
 
-              let marker = L.marker([results[0].lat.value, results[0].long.value]).addTo(newMap);
-              // build first row
-              let listOfSelects = Object.keys(results[0]);
-             
-              //var firstRow = "<tr>";
-              let firstRow = "\ ";
-              for(let key in listOfSelects)
-              {
-                //firstRow += "<th>" + listOfSelects[key] + "</th>";
-                firstRow += listOfSelects[key] + "\ ";
+              for(let i = 0; i < results.length; i++){
+                let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(newMap).bindPopup(results[i].subject.value);
+                // build first row
+                let listOfSelects = Object.keys(results[0]);
+               
+                //var firstRow = "<tr>";
+                let firstRow = "\ ";
+                for(let key in listOfSelects)
+                {
+                  //firstRow += "<th>" + listOfSelects[key] + "</th>";
+                  firstRow += listOfSelects[key] + "\ ";
+                }
+                //firstRow += "</tr>";
+                firstRow += "\ ";
+                console.log(firstRow);
+                //resultTable.append(firstRow); 
               }
-              //firstRow += "</tr>";
-              firstRow += "\ ";
-              console.log(firstRow);
-              //resultTable.append(firstRow); 
-
               printResults(results);
             });
           }
