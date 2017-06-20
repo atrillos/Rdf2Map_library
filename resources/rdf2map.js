@@ -9,11 +9,13 @@
                     PREFIX ex: <http://example.org/>  \
                     PREFIX ngeo: <http://geovocab.org/geometry#> \
                     PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                    PREFIX dcterms: <http://purl.org/dc/terms/>\
                     \
-                    SELECT ?subject ?lat ?long\
+                    SELECT ?name ?lat ?long\
                     WHERE \
                     {\
                       ?subject rdf:type geo:Point;
+                      dcterms:title ?name;\
                       ngeo:posList ?position.\
                       ?position geo:lat ?lat;\
                       geo:long ?long.\
@@ -86,7 +88,7 @@
               }).addTo(newMap);
 
               for(let i = 0; i < results.length; i++){
-                let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(newMap).bindPopup(results[i].subject.value);
+                let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(newMap).bindPopup(results[i].name.value);
                 // build first row
                 let listOfSelects = Object.keys(results[0]);
                
