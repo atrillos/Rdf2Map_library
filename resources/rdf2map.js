@@ -6,8 +6,10 @@
     // initialize    
     let RDF2Map = {
       vocabulary: null,
-      map: null
+      map: null,
+      markers: []
     };
+
 
     RDF2Map.loadRDF = function (fileInputId, map) {
       RDF2Map.map = map;
@@ -19,6 +21,7 @@
           // Entire file
           this.vocabulary = this.result;
           addLocationPoints(this.vocabulary);
+            
 
         };  
         reader.readAsText(file);
@@ -52,10 +55,11 @@
           id: 'mapbox.streets'
         }).addTo(RDF2Map.map);
 
-        let markers = [];
+        // let markers = [];
         for(let i = 0; i < results.length; i++){
           let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(results[i].name.value);
-          markers.push(marker);
+          RDF2Map.markers.push(marker);
+          console.log(RDF2Map.markers);
           // build first row
           let listOfSelects = Object.keys(results[0]);
          
@@ -70,15 +74,16 @@
           firstRow += "\ ";
           console.log(firstRow);
           //resultTable.append(firstRow); 
+        
         }
-
-        if (markers.length > 1) {
+        
+        // Fix bounds
+        if (RDF2Map.markers.length > 1) {
           // Create a marker group with all the markers
-          let markerGroup = new L.featureGroup(markers);
+          let markerGroup = new L.featureGroup(RDF2Map.markers);
           // Fit the map to the markers bounds.
           RDF2Map.map.fitBounds(markerGroup.getBounds());  
         }
-
         printResults(results);
       });
     }
@@ -96,7 +101,7 @@
           id: 'mapbox.streets'
         }).addTo(RDF2Map.map);
 
-        let markers = [];
+        // let markers = [];
         //Define dimensions of specific icon type
         var StationIcon = L.Icon.extend({
           options: {
@@ -113,7 +118,7 @@
 
         for(let j = 0; j < results.length; j++){
           let marker = L.marker([results[j].lat.value, results[j].long.value], {icon: stationIcon}).addTo(RDF2Map.map).bindPopup(results[j].name.value);
-          markers.push(marker);
+          RDF2Map.markers.push(marker);
           // build first row
           let listOfSelects = Object.keys(results[0]);
          
@@ -128,13 +133,6 @@
           firstRow += "\ ";
           console.log(firstRow);
           //resultTable.append(firstRow); 
-        }
-
-        if (markers.length > 1) {
-          // Create a marker group with all the markers
-          let markerGroup = new L.featureGroup(markers);
-          // Fit the map to the markers bounds.
-          RDF2Map.map.fitBounds(markerGroup.getBounds());  
         }
 
         printResults(results);
