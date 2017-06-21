@@ -7,7 +7,7 @@
 
 ex:Station1 rdf:type lgd:Station .
 ex:Station1 dcterms:title "Bonn Hauptbahnhof".
-ex:Station1 rdf:type geo:Point .
+ex:Station1 rdf:type lgd:Icon .
 ex:Station1 ngeo:posList _:blank.
 _:blank geo:lat "50.7323"; 
     geo:long "7.0970".
@@ -32,3 +32,11 @@ ex:Museum1 rdf:type geo:Point .
 ex:Museum1 ngeo:posList _:blank4.
 _:blank4 geo:lat "50.7369"; 
     geo:long "7.1012".
+
+ex:Station4 rdf:type lgd:Station .
+ex:Station4 dcterms:title "Siegburg/Bonn".
+ex:Station4 rdf:type geo:Point .
+ex:Station4 ngeo:posList _:blank5.
+_:blank5 geo:lat "50.7907938"; 
+    geo:long "7.2005865".
+
