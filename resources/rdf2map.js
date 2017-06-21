@@ -58,7 +58,6 @@
         for(let i = 0; i < results.length; i++){
           let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(results[i].name.value);
           RDF2Map.markers.push(marker);
-          console.log(RDF2Map.markers);
           // build first row
           let listOfSelects = Object.keys(results[0]);
          
