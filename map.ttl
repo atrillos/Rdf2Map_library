@@ -4,38 +4,59 @@
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
 @prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-ex:Station1 rdf:type lgd:Station .
-ex:Station1 dcterms:title "Bonn Hauptbahnhof".
-ex:Station1 rdf:type lgd:Icon .
-ex:Station1 ngeo:posList _:blank.
-_:blank geo:lat "50.7323"; 
-    geo:long "7.0970".
+ex:Station1 rdf:type lgd:Station ;
+	dcterms:title "Bonn Hauptbahnhof";
+    rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7323"; 
+    geo:long "7.0970";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
 ex:Station2 rdf:type lgd:Station .
 ex:Station2 dcterms:title "Bertha-von-Suttner-Platz (Bonn)".
-ex:Station2 rdf:type geo:Point .
-ex:Station2 ngeo:posList _:blank2.
-_:blank2 geo:lat "50.737416"; 
+ex:Station2 ngeo:Geometry geo:Point .
+ex:Station2 geo:lat "50.737416"; 
     geo:long "7.102456".
 
 ex:Station3 rdf:type lgd:Station .
 ex:Station3 dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz".
-ex:Station3 rdf:type geo:Point .
-ex:Station3 ngeo:posList _:blank3.
-_:blank3 geo:lat "50.739649"; 
+ex:Station3 ngeo:Geometry geo:Point .
+ex:Station3 geo:lat "50.739649"; 
     geo:long "7.11829".
 
 ex:Museum1 rdf:type lgd:Museum .
 ex:Museum1 dcterms:title "Beethoven-Haus Bonn".
-ex:Museum1 rdf:type geo:Point .
-ex:Museum1 ngeo:posList _:blank4.
-_:blank4 geo:lat "50.7369"; 
-    geo:long "7.1012".
+ex:Museum1 foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en".
+ex:Museum1 ngeo:Geometry lgd:Icon .
+ex:Museum1 geo:lat "50.7369"; 
+    geo:long "7.1012";
+    foaf:depiction "http://i.imgur.com/pEAHIEr.png".
 
 ex:Station4 rdf:type lgd:Station .
 ex:Station4 dcterms:title "Siegburg/Bonn".
-ex:Station4 rdf:type geo:Point .
-ex:Station4 ngeo:posList _:blank5.
-_:blank5 geo:lat "50.7907938"; 
+ex:Station4 ngeo:Geometry geo:Point .
+ex:Station4 geo:lat "50.7907938"; 
     geo:long "7.2005865".
+
+ex:University1 rdf:type lgd:University .
+ex:University1 dcterms:title "Universität Bonn".
+ex:University1 foaf:homepage "https://www.uni-bonn.de".
+ex:University1 ngeo:Geometry lgd:Icon .
+ex:University1 geo:lat "50.7268"; 
+    geo:long "7.0865".
+
+ex:Polygon1 ngeo:Geometry ngeo:Polygon .
+ex:Polygon1 rdf:type lgd:University .
+ex:Polygon1 dcterms:title "Hofgarten".
+ex:Polygon1 ngeo:posList _:blank6, _:blank7, _:blank8, _:blank9.
+_:blank6 geo:lat "50.7342023"; 
+    geo:long "7.1042202".
+_:blank7 geo:lat "50.732454"; 
+    geo:long "7.1019723".
+_:blank8 geo:lat "50.7310443"; 
+    geo:long "7.1047357".
+_:blank9 geo:lat "50.7328772"; 
+    geo:long "7.1065424".
