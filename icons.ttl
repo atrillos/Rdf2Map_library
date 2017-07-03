@@ -1,0 +1,54 @@
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+@prefix ngeo: <http://geovocab.org/geometry#> .
+@prefix lgd: <http://linkedgeodata.org/ontology/> .
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+ex:Station1 rdf:type lgd:Station ;
+	dcterms:title "Bonn Hauptbahnhof";
+    rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7323"; 
+    geo:long "7.0970";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
+
+ex:Station2 rdf:type lgd:Station ;
+	dcterms:title "Haltestelle Parise Strasse";
+    rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7551657";
+    geo:long "7.0769269";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
+
+ex:Station3 rdf:type lgd:Station ;
+	dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.739649"; 
+    geo:long "7.11829";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
+
+ex:Station4 rdf:type lgd:Station ;
+	dcterms:title "Haltestelle Stadthaus";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7366769";
+    geo:long "7.0954426";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
+
+ex:Museum1 rdf:type lgd:Sport;
+	dcterms:title "Academic Museum";
+	ngeo:Geometry lgd:Icon;
+	geo:lat "50.731812"; 
+    geo:long "7.106313";
+    foaf:depiction "http://i.imgur.com/pEAHIEr.png".
+
+
+ex:Museum2 rdf:type lgd:Sport;
+	dcterms:title "Beethoven-Haus Bonn";
+	foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7369";
+    geo:long "7.1012";
+    foaf:depiction "http://i.imgur.com/pEAHIEr.png".
