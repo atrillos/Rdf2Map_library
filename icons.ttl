@@ -16,8 +16,8 @@ ex:Station1 rdf:type lgd:Station ;
     foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
 ex:Station2 rdf:type lgd:Station ;
-	dcterms:title "Haltestelle Parise Strasse";
-    rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
+	dcterms:title "Haltestelle Pariser Strasse";
+    rdfs:comment "Address: 53117 Bonn";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7551657";
     geo:long "7.0769269";

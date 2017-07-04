@@ -6,6 +6,7 @@
 @prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix dbpedia: <http://dbpedia.org/ontology/>.
 
 ex:Station1 rdf:type lgd:Station ;
 	dcterms:title "Bonn Hauptbahnhof";
@@ -60,3 +61,15 @@ _:blank8 geo:lat "50.7310443";
     geo:long "7.1047357".
 _:blank9 geo:lat "50.7328772"; 
     geo:long "7.1065424".
+
+ex:line1 ngeo:Geometry lgd:Path;
+    rdf:type "Path";
+    dcterms:title "Path from Siegburg to Bonn";
+    dbpedia:Colour "yellow";
+    ngeo:posList _:pathPoint1, _:pathPoint2, _:pathPoint3.
+_:pathPoint1 geo:lat "50.7907938"; 
+    geo:long "7.2005865".
+_:pathPoint2 geo:lat "50.739649"; 
+    geo:long "7.11829".
+_:pathPoint3 geo:lat "50.737416"; 
+    geo:long "7.102456".

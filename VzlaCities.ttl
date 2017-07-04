@@ -29,6 +29,7 @@ ex:City3 rdf:type lgd:City;
 ex:City4 rdf:type lgd:City;
 	dcterms:title "Caracas";
 	ngeo:Geometry geo:Point;
+	rdfs:comment "Capital City.";
 	geo:lat "10.480248"; 
     geo:long "-66.930217".
 
