@@ -144,7 +144,7 @@
                     popupAnchor:  [0, -7]
                   }
                 });
-                
+
                 for(let i = 0; i < results.length; i++)
                 {
                   let popup = "<b>"+results[i].name.value+"</b>";
@@ -190,7 +190,8 @@
                       break;
                        
                     //Polygons
-                    case 'http://geovocab.org/geometry#Polygon':                    
+                    case 'http://geovocab.org/geometry#Polygon':
+
                       if(results[i].link != null)
                       {
                         popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
@@ -198,7 +199,9 @@
                       if(results[i].extraInfo != null)
                       {
                         popup += "<br>"+results[i].extraInfo.value;
-                      } 
+                      }
+
+
                       store.execute(polygonQuery, function (err, polygons) 
                       {
                         if (err) 
@@ -219,10 +222,11 @@
                               poly = [polygons[j].lat.value, polygons[j].long.value];
                               posPoly.push(poly);
                               bounds.push(poly);
-                              var marker = L.polygon(posPoly).addTo(RDF2Map.map).bindPopup(popup);
-                              markers.push(marker);
                             }
                           }
+                          var marker = L.polygon(posPoly).addTo(RDF2Map.map).bindPopup(popup);
+                          markers.push(marker);
+                          RDF2Map.map.fitBounds(bounds);
                         }
                       });
                       break;
