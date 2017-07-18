@@ -109,9 +109,10 @@
             }  
             if (results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
-            } 
+            }
+
             if(results[i].iconURL == null) {
-              marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(popup);
+              marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).addTo(RDF2Map.map).bindPopup(popup);
   
             } else {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).addTo(RDF2Map.map).bindPopup(popup);
@@ -195,7 +196,7 @@
                 PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
                 \
-                SELECT ?name ?lat ?long ?type ?iconURL ?link ?extrainfo\
+                SELECT ?name ?lat ?long ?type ?typeIcon ?iconURL ?link ?extrainfo\
                 WHERE \
                 {\
                   ?subject ngeo:Geometry lgd:Icon;\
@@ -203,6 +204,7 @@
                   dcterms:title ?name;\
                   geo:lat ?lat;\
                   geo:long ?long.\
+                  ?type ex:hasIcon ?typeIcon.
                   OPTIONAL{?subject foaf:depiction ?iconURL}\
                   OPTIONAL{?subject rdfs:comment ?extraInfo} \
                   OPTIONAL{?subject foaf:homepage ?link} \
