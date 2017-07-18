@@ -26,7 +26,7 @@ ex:Restauran2 rdf:type lgd:Restaurant;
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.736097"; 
 	geo:long "7.098149";
-	foaf:depiction "http://i.imgur.com/aUWjW1J.png".
+	foaf:depiction "http://i.imgur.com/YYUfavi.png".
 
 ex:Station1 rdf:type lgd:Station ;
 	dcterms:title "Bonn Hauptbahnhof";
