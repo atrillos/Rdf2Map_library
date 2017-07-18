@@ -10,6 +10,23 @@
 lgd:Station ex:hasIcon "http://i.imgur.com/9xgY08t.png".
 lgd:Museum ex:hasIcon "http://i.imgur.com/pEAHIEr.png".
 lgd:Sport ex:hasIcon "http://i.imgur.com/qV7kKnZ.png".
+lgd:Restaurant ex:hasIcon "http://i.imgur.com/ApKizlU.png".
+
+
+ex:Restauran1 rdf:type lgd:Restaurant;
+	dcterms:title "Rocco";
+    rdfs:comment "Rocco Restaurant";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.736802"; 
+	geo:long "7.097079".
+
+ex:Restauran2 rdf:type lgd:Restaurant;
+	dcterms:title "Mc Donald's";
+    rdfs:comment "Mc Donald's Friedensplatz";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.736097"; 
+	geo:long "7.098149";
+	foaf:depiction "http://i.imgur.com/aUWjW1J.png".
 
 ex:Station1 rdf:type lgd:Station ;
 	dcterms:title "Bonn Hauptbahnhof";
