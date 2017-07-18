@@ -127,10 +127,10 @@ _:blank16 geo:lat "50.704986";
 geo:long "7.119312".
 
 ex:City1 rdf:type lgd:City;
-	dcterms:title "Köln";
+	dcterms:title "Bonn";
 	ngeo:Geometry geo:Point;
-	geo:lat "50.9375"; 
-    geo:long "6.9603".
+	geo:lat "50.7374"; 
+    geo:long "7.0982".
 
 ex:City2 rdf:type lgd:City;
 	dcterms:title "Siegburg";
