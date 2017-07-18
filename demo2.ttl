@@ -1,0 +1,128 @@
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+@prefix ngeo: <http://geovocab.org/geometry#> .
+@prefix lgd: <http://linkedgeodata.org/ontology/> .
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+
+lgd:Station ex:hasIcon "http://i.imgur.com/9xgY08t.png".
+lgd:Museum ex:hasIcon "http://i.imgur.com/pEAHIEr.png".
+lgd:Sport ex:hasIcon "http://i.imgur.com/qV7kKnZ.png".
+
+ex:Station1 rdf:type lgd:Station ;
+	dcterms:title "Bonn Hauptbahnhof";
+    rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7323"; 
+    geo:long "7.0970".
+
+ex:Station2 rdf:type lgd:Station ;
+	dcterms:title "Haltestelle Pariser Strasse";
+    rdfs:comment "Address: 53117 Bonn";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7551657";
+    geo:long "7.0769269".
+
+ex:Station3 rdf:type lgd:Station ;
+	dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.739649"; 
+    geo:long "7.11829".
+
+ex:Station4 rdf:type lgd:Station ;
+	dcterms:title "Haltestelle Stadthaus";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7366769";
+    geo:long "7.0954426".
+
+ex:Museum1 rdf:type lgd:Museum;
+	dcterms:title "Academic Museum";
+	ngeo:Geometry lgd:Icon;
+	geo:lat "50.731812"; 
+    geo:long "7.106313".
+
+ex:Museum2 rdf:type lgd:Museum;
+	dcterms:title "Beethoven-Haus Bonn";
+	foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.7369";
+    geo:long "7.1012".
+
+ex:SportPark1 rdf:type lgd:Sport;
+	dcterms:title "SPORTPARK Ennert";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.738974";
+    geo:long "7.159512".
+
+ex:SportPark2 rdf:type lgd:Sport;
+	dcterms:title "Sportpark Nord";
+	ngeo:Geometry lgd:Icon ;
+	geo:lat "50.747954";
+    geo:long "7.083307".
+
+ex:Polygon1 ngeo:Geometry ngeo:Polygon;
+	rdf:type lgd:University ;
+	dcterms:title "Hofgarten";
+	ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
+_:blank1 geo:lat "50.7342023"; 
+    geo:long "7.1042202".
+_:blank2 geo:lat "50.732454"; 
+    geo:long "7.1019723".
+_:blank3 geo:lat "50.7310443"; 
+    geo:long "7.1047357".
+_:blank4 geo:lat "50.7328772"; 
+    geo:long "7.1065424".
+
+ex:Polygon2 ngeo:Geometry ngeo:Polygon;
+	rdf:type lgd:Park;
+	dcterms:title "Freizeitpark Rheinaue";
+	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
+_:blank5 geo:lat "50.718048"; 
+geo:long "7.133254".
+_:blank6 geo:lat "50.715182"; 
+geo:long "7.146284".
+_:blank7 geo:lat "50.707894"; 
+geo:long "7.155358".
+_:blank8 geo:lat "50.704381"; 
+geo:long "7.149980".
+_:blank9 geo:lat "50.715457"; 
+geo:long "7.129790".
+
+ex:Polygon3 ngeo:Geometry ngeo:Polygon;
+	rdf:type lgd:Park;
+	dcterms:title "Sudfriedhof";
+	ngeo:posList _:blank10, _:blank11, _:blank12, _:blank13, _:blank14, _:blank15, _:blank16.
+_:blank10 geo:lat "50.706478"; 
+geo:long "7.121922".
+_:blank11 geo:lat "50.705204"; 
+geo:long "7.125220".
+_:blank12 geo:lat "50.704182"; 
+geo:long "7.127159".
+_:blank13 geo:lat "50.702759"; 
+geo:long "7.126343".
+_:blank14 geo:lat "50.701749"; 
+geo:long "7.124604".
+_:blank15 geo:lat "50.703069"; 
+geo:long "7.122121".
+_:blank16 geo:lat "50.704986"; 
+geo:long "7.119312".
+
+ex:City1 rdf:type lgd:City;
+	dcterms:title "Köln";
+	ngeo:Geometry geo:Point;
+	geo:lat "50.9375"; 
+    geo:long "6.9603".
+
+ex:City2 rdf:type lgd:City;
+	dcterms:title "Düsseldorf";
+	ngeo:Geometry geo:Point;
+	geo:lat "51.2277"; 
+    geo:long "6.7735".
+
+ex:City4 rdf:type lgd:City;
+	dcterms:title "Aachen";
+	ngeo:Geometry geo:Point;
+	geo:lat "50.7753"; 
+    geo:long "6.0839".

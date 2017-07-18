@@ -204,7 +204,7 @@
                   dcterms:title ?name;\
                   geo:lat ?lat;\
                   geo:long ?long.\
-                  ?type ex:hasIcon ?typeIcon.
+                  ?type ex:hasIcon ?typeIcon.\
                   OPTIONAL{?subject foaf:depiction ?iconURL}\
                   OPTIONAL{?subject rdfs:comment ?extraInfo} \
                   OPTIONAL{?subject foaf:homepage ?link} \
