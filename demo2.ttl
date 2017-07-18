@@ -133,13 +133,13 @@ ex:City1 rdf:type lgd:City;
     geo:long "6.9603".
 
 ex:City2 rdf:type lgd:City;
-	dcterms:title "Düsseldorf";
+	dcterms:title "Siegburg";
 	ngeo:Geometry geo:Point;
-	geo:lat "51.2277"; 
-    geo:long "6.7735".
+	geo:lat "50.7998"; 
+    geo:long "7.2075".
 
 ex:City4 rdf:type lgd:City;
-	dcterms:title "Aachen";
+	dcterms:title "Königswinter";
 	ngeo:Geometry geo:Point;
-	geo:lat "50.7753"; 
-    geo:long "6.0839".
+	geo:lat "50.6920"; 
+    geo:long "7.1862".
