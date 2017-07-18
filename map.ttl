@@ -8,33 +8,35 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix dbpedia: <http://dbpedia.org/ontology/>.
 
+
+lgd:Station ex:hasIcon "http://i.imgur.com/9xgY08t.png".
+lgd:Museum ex:hasIcon "http://i.imgur.com/pEAHIEr.png".
+    
 ex:Station1 rdf:type lgd:Station ;
 	dcterms:title "Bonn Hauptbahnhof";
     rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7323"; 
-    geo:long "7.0970";
-    foaf:depiction "http://i.imgur.com/9xgY08t.png".
+    geo:long "7.0970".
 
-ex:Station2 rdf:type lgd:Station .
-ex:Station2 dcterms:title "Bertha-von-Suttner-Platz (Bonn)".
-ex:Station2 ngeo:Geometry geo:Point .
-ex:Station2 geo:lat "50.737416"; 
+ex:Station2 rdf:type lgd:Station ;
+    dcterms:title "Bertha-von-Suttner-Platz (Bonn)";
+    ngeo:Geometry geo:Point ;
+    geo:lat "50.737416"; 
     geo:long "7.102456".
 
-ex:Station3 rdf:type lgd:Station .
-ex:Station3 dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz".
-ex:Station3 ngeo:Geometry geo:Point .
-ex:Station3 geo:lat "50.739649"; 
+ex:Station3 rdf:type lgd:Station ;
+    dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
+    ngeo:Geometry geo:Point ;
+    geo:lat "50.739649"; 
     geo:long "7.11829".
 
-ex:Museum1 rdf:type lgd:Museum .
-ex:Museum1 dcterms:title "Beethoven-Haus Bonn".
-ex:Museum1 foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en".
-ex:Museum1 ngeo:Geometry lgd:Icon .
-ex:Museum1 geo:lat "50.7369"; 
-    geo:long "7.1012";
-    foaf:depiction "http://i.imgur.com/pEAHIEr.png".
+ex:Museum1 rdf:type lgd:Museum;
+    dcterms:title "Beethoven-Haus Bonn";
+    foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en";
+    ngeo:Geometry lgd:Icon;
+    geo:lat "50.7369"; 
+    geo:long "7.1012".
 
 ex:Station4 rdf:type lgd:Station .
 ex:Station4 dcterms:title "Siegburg/Bonn".
