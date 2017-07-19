@@ -47,10 +47,7 @@
       return new Promise ((resolve, reject) => {
           // run query
         store.execute(queryString, function (err, results) {
-          
-          console.log('//////////////');
-          console.log(results);
-          console.log('//////////////');
+
           L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 50,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -58,7 +55,9 @@
               'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'mapbox.streets'
           }).addTo(RDF2Map.map);
-          let markers = []
+          let markersArray = [];
+          // Chunked Loading enabled for performance
+          let markers = L.markerClusterGroup({chunckedLoading: true});
           for (let i = 0; i < results.length; i++) {
             let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
@@ -69,11 +68,12 @@
             }
 
             let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(popup);
-            markers.push(marker);
+            markersArray.push(marker);
+            markers.addLayer(marker);
           }
           // Uncomment for debugging.
           // printResults(results);
-          resolve(markers);
+          resolve([markers, markersArray]);
         });
         
       
@@ -160,6 +160,7 @@
             let marker = L.polygon(polygons[polygonName]).addTo(RDF2Map.map).bindPopup(popup);
             markers.push(marker);
           }
+          
           resolve(markers);
           // Uncomment for debugging.
           //printResults(results);
@@ -289,16 +290,28 @@
             //promises.push(processIcons(queryIcons, store, mapid));
             //promises.push(processPolygon(polygonsQuery, store, mapid)); 
             Promise.all(promises).then((res) => {
+
+              let markers = res[0];
+              let markerCluster = markers[0];
+              let bounds = markers[1];
+              
+              // Add the clusters into map.
+              RDF2Map.map.addLayer(markerCluster);
+
+              // Bounds fixed for markers
+              let markerGroup = new L.featureGroup(bounds);
+              RDF2Map.map.fitBounds(markerGroup.getBounds());  
+              
+              /*
               let markers = res.reduce((a, b) => {
                 return a.concat(b);
               });
               
               if (markers.length > 1) {
                 // Create a marker group with all the markers
-                let markerGroup = new L.featureGroup(markers);
                 // Fit the map to the markers bounds.
-                RDF2Map.map.fitBounds(markerGroup.getBounds());  
-              }              
+              } 
+              */             
             });
             
           }
