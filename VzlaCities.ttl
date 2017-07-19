@@ -9,62 +9,62 @@
 
 
 ex:City1 rdf:type lgd:City;
-	dcterms:title "Maracaibo";
+	rdfs:label "Maracaibo";
 	ngeo:Geometry geo:Point;
 	geo:lat "10.660833"; 
     geo:long "-71.733685".
 
 ex:City2 rdf:type lgd:City;
-	dcterms:title "San Cristobal";
+	rdfs:label "San Cristobal";
 	ngeo:Geometry geo:Point;
 	geo:lat "7.745627"; 
     geo:long "-72.215066".
 
 ex:City3 rdf:type lgd:City;
-	dcterms:title "Porlamar";
+	rdfs:label "Porlamar";
 	ngeo:Geometry geo:Point;
 	geo:lat "10.957360"; 
     geo:long "-63.884727".
 
 ex:City4 rdf:type lgd:City;
-	dcterms:title "Caracas";
+	rdfs:label "Caracas";
 	ngeo:Geometry geo:Point;
 	rdfs:comment "Capital City.";
 	geo:lat "10.480248"; 
     geo:long "-66.930217".
 
 ex:City5 rdf:type lgd:City;
-	dcterms:title "Ciudad Bolivar";
+	rdfs:label "Ciudad Bolivar";
 	ngeo:Geometry geo:Point;
 	geo:lat "8.114092"; 
     geo:long "-63.556032".
 
 ex:City6 rdf:type lgd:City;
-	dcterms:title "Merida";
+	rdfs:label "Merida";
 	ngeo:Geometry geo:Point;
 	geo:lat "8.648314"; 
     geo:long "-71.151908".
 
 ex:City7 rdf:type lgd:City;
-	dcterms:title "Maturin";
+	rdfs:label "Maturin";
 	ngeo:Geometry geo:Point;
 	geo:lat "9.723314"; 
     geo:long "-63.160039".
 
 ex:City8 rdf:type lgd:City;
-	dcterms:title "Barquisimeto";
+	rdfs:label "Barquisimeto";
 	ngeo:Geometry geo:Point;
 	geo:lat "10.060224"; 
     geo:long "-69.360938".
 
 ex:City9 rdf:type lgd:City;
-	dcterms:title "Valencia";
+	rdfs:label "Valencia";
 	ngeo:Geometry geo:Point;
 	geo:lat "10.148827"; 
     geo:long "-68.019960".
 
 ex:City10 rdf:type lgd:City;
-	dcterms:title "Puerto la Cruz";
+	rdfs:label "Puerto la Cruz";
 	ngeo:Geometry geo:Point;
 	geo:lat "10.201976"; 
     geo:long "-64.627015".
