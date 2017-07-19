@@ -48,7 +48,9 @@
           // run query
         store.execute(queryString, function (err, results) {
           
-
+          console.log('//////////////');
+          console.log(results);
+          console.log('//////////////');
           L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 50,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -166,7 +168,7 @@
     }
 
     function addLocationPoints(vocabulary) {
-
+      /*
       let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
                 PREFIX ex: <http://example.org/>  \
@@ -175,12 +177,33 @@
                 PREFIX dcterms: <http://purl.org/dc/terms/>\
                 PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
                 \
                 SELECT ?name ?lat ?long ?link ?extrainfo\
                 WHERE \
                 {\
                   ?subject ngeo:Geometry geo:Point;
                   dcterms:title ?name;\
+                  geo:lat ?lat;\
+                  geo:long ?long.\
+                  OPTIONAL{?subject rdfs:comment ?extraInfo} \
+                  OPTIONAL{?subject foaf:homepage ?link} \
+                }`
+                */
+      let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?name ?lat ?long ?extrainfo ?link\
+                WHERE \
+                {\
+                  ?subject rdfs:label ?name;\
                   geo:lat ?lat;\
                   geo:long ?long.\
                   OPTIONAL{?subject rdfs:comment ?extraInfo} \
@@ -256,14 +279,15 @@
             console.log("store load error", err);
             console.log("Could not Run SPARQL Query:", err.message);
           } else {
+            
             let mapid = RDF2Map.map._container.id;
             RDF2Map.map.remove();
             RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
             
             let promises = [];
             promises.push(processMarkers(queryPoints, store, mapid)); 
-            promises.push(processIcons(queryIcons, store, mapid));
-            promises.push(processPolygon(polygonsQuery, store, mapid)); 
+            //promises.push(processIcons(queryIcons, store, mapid));
+            //promises.push(processPolygon(polygonsQuery, store, mapid)); 
             Promise.all(promises).then((res) => {
               let markers = res.reduce((a, b) => {
                 return a.concat(b);
@@ -276,6 +300,7 @@
                 RDF2Map.map.fitBounds(markerGroup.getBounds());  
               }              
             });
+            
           }
         });
       });
