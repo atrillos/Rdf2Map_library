@@ -27,7 +27,7 @@ outputFile.write('\n')
 if infoType == "marker":
 	for i in range(int(quantity)):
 		obj = 'ex:Object' + str(i) + ' rdf:type lgd:City;\n'
-		obj += '\tdcterms:title \"' + str(i) + '\";\n'
+		obj += '\trdfs:label \"' + str(i) + '\";\n'
 		obj += '\tngeo:Geometry geo:Point;\n'
 		lat = random.randint(-80, 80)
 		lon = random.randint(-180, 180)
