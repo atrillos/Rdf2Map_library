@@ -59,15 +59,16 @@
           // Chunked Loading enabled for performance
           let markers = L.markerClusterGroup({chunckedLoading: true});
           for (let i = 0; i < results.length; i++) {
-            let popup = "<b>"+results[i].name.value+"</b>";
+            /*let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
               popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
             }
             if(results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
             }
-
-            let marker = L.marker([results[i].lat.value, results[i].long.value]).addTo(RDF2Map.map).bindPopup(popup);
+            /*/
+            let popup = null;
+            let marker = L.marker([results[i].lat.value, results[i].long.value]);//.addTo(RDF2Map.map);
             markersArray.push(marker);
             markers.addLayer(marker);
           }
