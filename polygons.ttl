@@ -55,3 +55,33 @@ geo:long "7.122121".
 _:blank16 geo:lat "50.704986"; 
 geo:long "7.119312".
 
+ex:Polygon4 ngeo:Geometry ngeo:Polygon;
+	rdf:type lgd:Country;
+	dcterms:title "Berlin";
+	ngeo:posList _:blank17, _:blank18, _:blank19, _:blank20, _:blank21, _:blank22, _:blank23, _:blank24, _:blank25, _:blank26, _:blank27, _:blank28, _:blank29.
+_:blank17 geo:long	"13.699737950000014";
+geo:lat	"52.377883".
+_:blank18 geo:long	"13.420984950000076";
+geo:lat	"52.376247".
+_:blank19 geo:long	"13.312119950000067";
+geo:lat	"52.399599500000051".
+_:blank20 geo:long	"13.167635450000063";
+geo:lat	"52.394309".
+_:blank21 geo:long	"13.08833295";
+geo:lat	"52.4196115".
+_:blank22 geo:long	"13.153687950000062";
+geo:lat	"52.501695500000068".
+_:blank23 geo:long	"13.163798950000029";
+geo:lat	"52.598196500000057".
+_:blank24 geo:long	"13.398539950000043";
+geo:lat	"52.648194500000017".
+_:blank25 geo:long	"13.488219450000031";
+geo:lat	"52.670551".
+_:blank26 geo:long	"13.610827450000045";
+geo:lat	"52.544235500000013".
+_:blank27 geo:long	"13.666979950000098";
+geo:lat	"52.474167".
+_:blank28 geo:long	"13.760469450000045";
+geo:lat	"52.438480500000082".
+_:blank29 geo:long	"13.699737950000014";
+geo:lat	"52.377883".
