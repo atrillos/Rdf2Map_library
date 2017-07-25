@@ -55,26 +55,26 @@
               'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'mapbox.streets'
           }).addTo(RDF2Map.map);
-          let markersArray = [];
+          let markers = [];
           // Chunked Loading enabled for performance
-          let markers = L.markerClusterGroup({chunckedLoading: true});
+          // let markers = L.markerClusterGroup({chunckedLoading: true});
           for (let i = 0; i < results.length; i++) {
-            /*let popup = "<b>"+results[i].name.value+"</b>";
+            let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
               popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
             }
             if(results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
             }
-            /*/
-            let popup = null;
-            let marker = L.marker([results[i].lat.value, results[i].long.value]);//.addTo(RDF2Map.map);
-            markersArray.push(marker);
-            markers.addLayer(marker);
+            
+            let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
+            //markersArray.push(marker);
+            //markers.addLayer(marker);
+            markers.push(marker);
           }
           // Uncomment for debugging.
           // printResults(results);
-          resolve([markers, markersArray]);
+          resolve(markers);
         });
         
       
@@ -104,6 +104,8 @@
           });
           
           let markers = [];
+          // Chunked Loading enabled for performance
+          // let markers = L.markerClusterGroup({chunckedLoading: true});
           for(let i = 0; i < results.length; i++){
             let marker;
             let popup = "<b>"+results[i].name.value+"</b>";
@@ -115,11 +117,11 @@
             }
 
             if(results[i].iconURL == null) {
-              marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).addTo(RDF2Map.map).bindPopup(popup);
-  
+              marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).bindPopup(popup);
             } else {
-              marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).addTo(RDF2Map.map).bindPopup(popup);
+              marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).bindPopup(popup);
             }
+            // markers.addLayer(marker);
             markers.push(marker);
           }
 
@@ -161,7 +163,7 @@
             let marker = L.polygon(polygons[polygonName]).addTo(RDF2Map.map).bindPopup(popup);
             markers.push(marker);
           }
-          
+
           resolve(markers);
           // Uncomment for debugging.
           //printResults(results);
@@ -170,28 +172,7 @@
     }
 
     function addLocationPoints(vocabulary) {
-      /*
-      let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX dbr:  <http://dbpedia.org/resource/> \
-                \
-                SELECT ?name ?lat ?long ?link ?extrainfo\
-                WHERE \
-                {\
-                  ?subject ngeo:Geometry geo:Point;
-                  dcterms:title ?name;\
-                  geo:lat ?lat;\
-                  geo:long ?long.\
-                  OPTIONAL{?subject rdfs:comment ?extraInfo} \
-                  OPTIONAL{?subject foaf:homepage ?link} \
-                }`
-                */
+
       let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
                 PREFIX ex: <http://example.org/>  \
@@ -206,10 +187,11 @@
                 WHERE \
                 {\
                   ?subject rdfs:label ?name;\
+                  ngeo:Geometry geo:Point;\
                   geo:lat ?lat;\
                   geo:long ?long.\
                   OPTIONAL{?subject rdfs:comment ?extraInfo} \
-                  OPTIONAL{?subject foaf:homepage ?link} \
+                  OPTIONAL{?subject foaf:homepage ?link}\
                 }`
 
       let queryIcons = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
@@ -226,7 +208,7 @@
                 {\
                   ?subject ngeo:Geometry lgd:Icon;\
                   rdf:type ?type;\
-                  dcterms:title ?name;\
+                  rdfs:label ?name;\
                   geo:lat ?lat;\
                   geo:long ?long.\
                   ?type ex:hasIcon ?typeIcon.\
@@ -248,7 +230,7 @@
                 WHERE \
                 {\
                   ?subject ngeo:Geometry ngeo:Polygon;
-                  dcterms:title ?name;\
+                  rdfs:label ?name;\
                   ngeo:posList ?position.\
                   ?position geo:lat ?lat;\
                   geo:long ?long.\
@@ -288,31 +270,30 @@
             
             let promises = [];
             promises.push(processMarkers(queryPoints, store, mapid)); 
-            //promises.push(processIcons(queryIcons, store, mapid));
-            //promises.push(processPolygon(polygonsQuery, store, mapid)); 
+            promises.push(processIcons(queryIcons, store, mapid));
+            promises.push(processPolygon(polygonsQuery, store, mapid)); 
             Promise.all(promises).then((res) => {
-
-              let markers = res[0];
-              let markerCluster = markers[0];
-              let bounds = markers[1];
               
-              // Add the clusters into map.
-              RDF2Map.map.addLayer(markerCluster);
-
-              // Bounds fixed for markers
-              let markerGroup = new L.featureGroup(bounds);
-              RDF2Map.map.fitBounds(markerGroup.getBounds());  
-              
-              /*
               let markers = res.reduce((a, b) => {
                 return a.concat(b);
               });
+
+              // Create the clusters
+              let clusters = L.markerClusterGroup({chunckedLoading: true});
+              for (let i = 0; i < markers.length; i = i + 1) {
+                clusters.addLayer(markers[i]);
+              }
+
+              // Add clusters to map.
+              RDF2Map.map.addLayer(clusters);
               
-              if (markers.length > 1) {
-                // Create a marker group with all the markers
-                // Fit the map to the markers bounds.
-              } 
-              */             
+              // Bounds fixed for markers
+              let markerGroup = new L.featureGroup(markers);
+              
+              if (markers.length > 1){
+                RDF2Map.map.fitBounds(markerGroup.getBounds());  
+              }
+              
             });
             
           }

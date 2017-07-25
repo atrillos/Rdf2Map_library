@@ -13,53 +13,53 @@ lgd:Museum ex:hasIcon "http://i.imgur.com/pEAHIEr.png".
 lgd:Sport ex:hasIcon "http://i.imgur.com/qV7kKnZ.png".
 
 ex:Station1 rdf:type lgd:Station ;
-	dcterms:title "Bonn Hauptbahnhof";
+	rdfs:label "Bonn Hauptbahnhof";
     rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7323"; 
     geo:long "7.0970".
 
 ex:Station2 rdf:type lgd:Station ;
-	dcterms:title "Haltestelle Pariser Strasse";
+	rdfs:label "Haltestelle Pariser Strasse";
     rdfs:comment "Address: 53117 Bonn";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7551657";
     geo:long "7.0769269".
 
 ex:Station3 rdf:type lgd:Station ;
-	dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
+	rdfs:label "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.739649"; 
     geo:long "7.11829".
 
 ex:Station4 rdf:type lgd:Station ;
-	dcterms:title "Haltestelle Stadthaus";
+	rdfs:label "Haltestelle Stadthaus";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7366769";
     geo:long "7.0954426".
 
 ex:Museum1 rdf:type lgd:Museum;
-	dcterms:title "Academic Museum";
+	rdfs:label "Academic Museum";
 	ngeo:Geometry lgd:Icon;
 	geo:lat "50.731812"; 
     geo:long "7.106313".
 
 
 ex:Museum2 rdf:type lgd:Museum;
-	dcterms:title "Beethoven-Haus Bonn";
+	rdfs:label "Beethoven-Haus Bonn";
 	foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7369";
     geo:long "7.1012".
 
 ex:SportPark1 rdf:type lgd:Sport;
-	dcterms:title "SPORTPARK Ennert";
+	rdfs:label "SPORTPARK Ennert";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.738974";
     geo:long "7.159512".
 
 ex:SportPark2 rdf:type lgd:Sport;
-	dcterms:title "Sportpark Nord";
+	rdfs:label "Sportpark Nord";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.747954";
     geo:long "7.083307".

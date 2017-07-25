@@ -10,7 +10,7 @@
 
 ex:Polygon1 ngeo:Geometry ngeo:Polygon;
 	rdf:type lgd:University ;
-	dcterms:title "Hofgarten";
+	rdfs:label "Hofgarten";
 	ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
 _:blank1 geo:lat "50.7342023"; 
     geo:long "7.1042202".
@@ -23,7 +23,7 @@ _:blank4 geo:lat "50.7328772";
 
 ex:Polygon2 ngeo:Geometry ngeo:Polygon;
 	rdf:type lgd:Park;
-	dcterms:title "Freizeitpark Rheinaue";
+	rdfs:label "Freizeitpark Rheinaue";
 	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank5 geo:lat "50.718048"; 
 geo:long "7.133254".
@@ -38,7 +38,7 @@ geo:long "7.129790".
 
 ex:Polygon3 ngeo:Geometry ngeo:Polygon;
 	rdf:type lgd:Park;
-	dcterms:title "Sudfriedhof";
+	rdfs:label "Sudfriedhof";
 	ngeo:posList _:blank10, _:blank11, _:blank12, _:blank13, _:blank14, _:blank15, _:blank16.
 _:blank10 geo:lat "50.706478"; 
 geo:long "7.121922".

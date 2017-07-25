@@ -14,14 +14,14 @@ lgd:Restaurant ex:hasIcon "http://i.imgur.com/ApKizlU.png".
 
 
 ex:Restauran1 rdf:type lgd:Restaurant;
-	dcterms:title "Rocco";
+	rdfs:label "Rocco";
     rdfs:comment "Rocco Restaurant";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.736802"; 
 	geo:long "7.097079".
 
 ex:Restauran2 rdf:type lgd:Restaurant;
-	dcterms:title "Mc Donald's";
+	rdfs:label "Mc Donald's";
     rdfs:comment "Mc Donald's Friedensplatz";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.736097"; 
@@ -29,59 +29,59 @@ ex:Restauran2 rdf:type lgd:Restaurant;
 	foaf:depiction "http://i.imgur.com/YYUfavi.png".
 
 ex:Station1 rdf:type lgd:Station ;
-	dcterms:title "Bonn Hauptbahnhof";
+	rdfs:label "Bonn Hauptbahnhof";
     rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7323"; 
     geo:long "7.0970".
 
 ex:Station2 rdf:type lgd:Station ;
-	dcterms:title "Haltestelle Pariser Strasse";
+	rdfs:label "Haltestelle Pariser Strasse";
     rdfs:comment "Address: 53117 Bonn";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7551657";
     geo:long "7.0769269".
 
 ex:Station3 rdf:type lgd:Station ;
-	dcterms:title "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
+	rdfs:label "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.739649"; 
     geo:long "7.11829".
 
 ex:Station4 rdf:type lgd:Station ;
-	dcterms:title "Haltestelle Stadthaus";
+	rdfs:label "Haltestelle Stadthaus";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7366769";
     geo:long "7.0954426".
 
 ex:Museum1 rdf:type lgd:Museum;
-	dcterms:title "Academic Museum";
+	rdfs:label "Academic Museum";
 	ngeo:Geometry lgd:Icon;
 	geo:lat "50.731812"; 
     geo:long "7.106313".
 
 ex:Museum2 rdf:type lgd:Museum;
-	dcterms:title "Beethoven-Haus Bonn";
+	rdfs:label "Beethoven-Haus Bonn";
 	foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7369";
     geo:long "7.1012".
 
 ex:SportPark1 rdf:type lgd:Sport;
-	dcterms:title "SPORTPARK Ennert";
+	rdfs:label "SPORTPARK Ennert";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.738974";
     geo:long "7.159512".
 
 ex:SportPark2 rdf:type lgd:Sport;
-	dcterms:title "Sportpark Nord";
+	rdfs:label "Sportpark Nord";
 	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.747954";
     geo:long "7.083307".
 
 ex:Polygon1 ngeo:Geometry ngeo:Polygon;
 	rdf:type lgd:University ;
-	dcterms:title "Hofgarten";
+	rdfs:label "Hofgarten";
 	ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
 _:blank1 geo:lat "50.7342023"; 
     geo:long "7.1042202".
@@ -94,7 +94,7 @@ _:blank4 geo:lat "50.7328772";
 
 ex:Polygon2 ngeo:Geometry ngeo:Polygon;
 	rdf:type lgd:Park;
-	dcterms:title "Freizeitpark Rheinaue";
+	rdfs:label "Freizeitpark Rheinaue";
 	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank5 geo:lat "50.718048"; 
 geo:long "7.133254".
@@ -109,7 +109,7 @@ geo:long "7.129790".
 
 ex:Polygon3 ngeo:Geometry ngeo:Polygon;
 	rdf:type lgd:Park;
-	dcterms:title "Sudfriedhof";
+	rdfs:label "Sudfriedhof";
 	ngeo:posList _:blank10, _:blank11, _:blank12, _:blank13, _:blank14, _:blank15, _:blank16.
 _:blank10 geo:lat "50.706478"; 
 geo:long "7.121922".
@@ -127,38 +127,20 @@ _:blank16 geo:lat "50.704986";
 geo:long "7.119312".
 
 ex:City1 rdf:type lgd:City;
-	dcterms:title "Bonn";
+	rdfs:label "Bonn";
 	ngeo:Geometry geo:Point;
 	geo:lat "50.7374"; 
     geo:long "7.0982".
 
 ex:City2 rdf:type lgd:City;
-	dcterms:title "Siegburg";
+	rdfs:label "Siegburg";
 	ngeo:Geometry geo:Point;
 	geo:lat "50.7998"; 
     geo:long "7.2075".
 
 ex:City4 rdf:type lgd:City;
-	dcterms:title "Königswinter";
+	rdfs:label "Königswinter";
 	ngeo:Geometry geo:Point;
 	geo:lat "50.6920"; 
     geo:long "7.1862".
 
-
-ex:City8 rdf:type lgd:City;
-	dcterms:title "Barquisimeto";
-	ngeo:Geometry geo:Point;
-	geo:lat "10.060224"; 
-    geo:long "-69.360938".
-
-ex:City9 rdf:type lgd:City;
-	dcterms:title "Valencia";
-	ngeo:Geometry geo:Point;
-	geo:lat "10.148827"; 
-    geo:long "-68.019960".
-
-ex:City10 rdf:type lgd:City;
-	dcterms:title "Puerto la Cruz";
-	ngeo:Geometry geo:Point;
-	geo:lat "10.201976"; 
-    geo:long "-64.627015".
