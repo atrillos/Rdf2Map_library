@@ -143,3 +143,22 @@ ex:City4 rdf:type lgd:City;
 	ngeo:Geometry geo:Point;
 	geo:lat "50.6920"; 
     geo:long "7.1862".
+
+
+ex:City8 rdf:type lgd:City;
+	dcterms:title "Barquisimeto";
+	ngeo:Geometry geo:Point;
+	geo:lat "10.060224"; 
+    geo:long "-69.360938".
+
+ex:City9 rdf:type lgd:City;
+	dcterms:title "Valencia";
+	ngeo:Geometry geo:Point;
+	geo:lat "10.148827"; 
+    geo:long "-68.019960".
+
+ex:City10 rdf:type lgd:City;
+	dcterms:title "Puerto la Cruz";
+	ngeo:Geometry geo:Point;
+	geo:lat "10.201976"; 
+    geo:long "-64.627015".
