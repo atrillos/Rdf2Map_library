@@ -1,0 +1,5 @@
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix ngeo: <http://geovocab.org/geometry#> .
+@prefix dbp: <http://dbpedia.org/page/> .
+
+<http://dbpedia.org/page/Germany> ngeo:Geometry geo:Point.

@@ -81,6 +81,59 @@
       });
     }
 
+    //atrillos
+    function getInfoSubjects(queryString, store, mapid) {
+      //return new Promise ((resolve, reject) => {
+          // run query
+        store.execute(queryString, function (err, results) 
+        {
+          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 50,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+              '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+              'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(RDF2Map.map);
+
+          //i am testing with the example from the rdfstore-js github
+          //error : Uncaught DOMException: Failed to execute 'open' on 'XMLHttpRequest': Invalid URL
+          store.execute('LOAD <http://dbpedialite.org/titles/Lisp_%28programming_language%29>\
+                   INTO GRAPH <lisp>', function(err){
+
+            if(err) {
+              var query = 'PREFIX foaf:<http://xmlns.com/foaf/0.1/> SELECT ?o \
+                     FROM NAMED <lisp> { GRAPH <lisp> { ?s foaf:page ?o} }';
+              store.execute(query, function(err, results) {
+                console.log(results);
+                // process results
+              });
+            }
+          });
+
+          /*let markers = [];
+          // Chunked Loading enabled for performance
+          // let markers = L.markerClusterGroup({chunckedLoading: true});
+          for (let i = 0; i < results.length; i++) {
+            let popup = "<b>"+results[i].name.value+"</b>";
+            if (results[i].link != null) {
+              popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
+            }
+            if(results[i].extraInfo != null) {
+              popup += "<br>"+results[i].extraInfo.value;
+            }
+            
+            let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
+            //markersArray.push(marker);
+            //markers.addLayer(marker);
+            markers.push(marker);
+          }
+          // Uncomment for debugging.
+          // printResults(results);
+          resolve(markers);*/
+        });      
+      //});
+    }
+
     //function for icons
     function processIcons(queryString, store, mapid) {
       return new Promise ((resolve, reject) => {
@@ -256,6 +309,19 @@
                   geo:long ?long.\
                 }`
 
+        let getSubjects = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX dbpedia: <http://dbpedia.org/ontology/>\
+                SELECT ?subject ?property ?object\
+                WHERE \
+                {\
+                  ?subject ?property ?object.\
+                }`
+
       // create graph store
       rdfstore.create(function(err, store) {
         store.load("text/turtle", vocabulary, function(err, results) {   
@@ -269,6 +335,7 @@
             RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
             
             let promises = [];
+            getInfoSubjects(getSubjects,store,mapid);
             promises.push(processMarkers(queryPoints, store, mapid)); 
             promises.push(processIcons(queryIcons, store, mapid));
             promises.push(processPolygon(polygonsQuery, store, mapid)); 
