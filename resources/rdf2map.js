@@ -97,7 +97,7 @@
 
           //i am testing with the example from the rdfstore-js github
           //error : Uncaught DOMException: Failed to execute 'open' on 'XMLHttpRequest': Invalid URL
-          store.execute('LOAD <http://dbpedialite.org/titles/Lisp_%28programming_language%29>\
+          /*store.execute('LOAD <http://dbpedialite.org/titles/Lisp_%28programming_language%29>\
                    INTO GRAPH <lisp>', function(err){
 
             if(err) {
@@ -108,7 +108,21 @@
                 // process results
               });
             }
-          });
+          });*/
+
+          /*store.graph('http://dbpedia.org/data/Bonn.n3', function(err, graph){
+            // process graph
+            console.log(graph);
+          });*/
+
+          /*store.load('remote', '<http://dbpedia.org/data/Bonn.n3>', function(err, results) {
+            if(err){
+              console.log(err);
+            }else{
+              console.log(results);
+            } 
+          });*/
+          //3 different forms and none of them works :(
 
           /*let markers = [];
           // Chunked Loading enabled for performance
