@@ -85,15 +85,48 @@
     function getInfoSubjects(queryString, store, mapid) {
       //return new Promise ((resolve, reject) => {
           // run query
-        store.execute(queryString, function (err, results) 
-        {
-          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        store.execute(queryString, function (err, results) {
+          console.log('///////////res');
+          console.log(results[1].subject.value);
+          console.log('///////////res');
+          rdfstore.create(function(err, store2) {
+            console.log('///////////////store2');
+            store2.load('remote', 'https://dbpedia.org/resource/Limkheda', function(err, results) {
+              if(err){
+                console.log('///////////err');
+                console.log(err);
+                console.log('///////////err');
+              }
+              console.log('///////////////store2');
+              console.log(results);
+              console.log('///////////////store2');
+            });
+          });
+          /*
+          store.load('remote', '<http://dbpedia.org/data/Bonn.n3>', function(err, results) {
+            if(err){
+              console.log(err);
+            }else{
+              rdfstore.cr
+              console.log('////////////remote');
+              console.log(results);
+              console.log('////////////remote');
+            }
+          });
+          */
+          /*
+          for (let i = 0; i <= results.length - 1; i++) { 
+            results[i];
+            console.log('///////////res');
+          }
+          */
+          /*L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 50,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
               '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
               'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'mapbox.streets'
-          }).addTo(RDF2Map.map);
+          }).addTo(RDF2Map.map);*/
 
           //i am testing with the example from the rdfstore-js github
           //error : Uncaught DOMException: Failed to execute 'open' on 'XMLHttpRequest': Invalid URL
@@ -330,7 +363,7 @@
                 PREFIX lgd: <http://linkedgeodata.org/ontology/> \
                 PREFIX dcterms: <http://purl.org/dc/terms/>\
                 PREFIX dbpedia: <http://dbpedia.org/ontology/>\
-                SELECT ?subject ?property ?object\
+                SELECT ?subject\
                 WHERE \
                 {\
                   ?subject ?property ?object.\
@@ -345,11 +378,12 @@
           } else {
             
             let mapid = RDF2Map.map._container.id;
-            RDF2Map.map.remove();
-            RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
+            //RDF2Map.map.remove();
+            //RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
             
             let promises = [];
             getInfoSubjects(getSubjects,store,mapid);
+            /*
             promises.push(processMarkers(queryPoints, store, mapid)); 
             promises.push(processIcons(queryIcons, store, mapid));
             promises.push(processPolygon(polygonsQuery, store, mapid)); 
@@ -376,7 +410,7 @@
               }
               
             });
-            
+            */
           }
         });
       });
