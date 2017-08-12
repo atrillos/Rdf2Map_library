@@ -91,7 +91,7 @@
           console.log('///////////res');
           rdfstore.create(function(err, store2) {
             console.log('///////////////store2');
-            store2.load('remote', 'https://dbpedia.org/resource/Limkheda', function(err, results) {
+            store2.load('remote', 'http://dbpedia.org/resource/Limkheda', function(err, results) {
               if(err){
                 console.log('///////////err');
                 console.log(err);
