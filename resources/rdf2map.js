@@ -67,7 +67,6 @@
           }).addTo(RDF2Map.map);
           let markers = [];
           // Chunked Loading enabled for performance
-          // let markers = L.markerClusterGroup({chunckedLoading: true});
           for (let i = 0; i < results.length; i++) {
             let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
@@ -78,10 +77,8 @@
             }
             
             popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';
-            
+
             let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
-            //markersArray.push(marker);
-            //markers.addLayer(marker);
             markers.push(marker);
           }
           // Uncomment for debugging.
@@ -139,7 +136,6 @@
           let markers = [];
 
           // Chunked Loading enabled for performance
-          // let markers = L.markerClusterGroup({chunckedLoading: true});
           for(let i = 0; i < results.length; i++){
             let marker;
             let popup = "<b>"+results[i].name.value+"</b>";
@@ -157,7 +153,6 @@
             } else {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).bindPopup(popup);
             }
-            // markers.addLayer(marker);
             markers.push(marker);
           }
 
