@@ -85,7 +85,45 @@
     function getInfoSubjects(queryString, store, mapid) {
       //return new Promise ((resolve, reject) => {
           // run query
-        store.execute(queryString, function (err, results) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState == XMLHttpRequest.DONE) 
+          {
+            var remoteGraph = xhr.responseText;
+            store.load("text/n3", remoteGraph, function(err, results) {   
+              if (err) {
+                console.log("There was a problem while loading the graph: ", err);
+              } else {
+                var query1 = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?name ?lat ?long\
+                WHERE \
+                {\
+                  ?subject rdfs:label ?name.\
+                  ?subject geo:lat ?lat.\
+                  ?subject geo:long ?long.\
+                }';
+                store.execute(query1, function(err, results) {
+                  // process results
+                  console.log(results);
+                });
+              }
+            });
+          }
+        }
+        xhr.open('GET', 'http://dbpedia.org/resource/Germany', true);
+        xhr.setRequestHeader("Accept", "text/turtle");
+        xhr.send(null);
+        /*store.execute(queryString, function (err, results) {
           console.log('///////////res');
           console.log(results[1].subject.value);
           console.log('///////////res');
@@ -101,7 +139,7 @@
               console.log(results);
               console.log('///////////////store2');
             });
-          });
+          });*/
           /*
           store.load('remote', '<http://dbpedia.org/data/Bonn.n3>', function(err, results) {
             if(err){
@@ -177,7 +215,7 @@
           // Uncomment for debugging.
           // printResults(results);
           resolve(markers);*/
-        });      
+        //});      
       //});
     }
 
