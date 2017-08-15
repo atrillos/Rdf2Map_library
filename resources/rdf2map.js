@@ -42,6 +42,16 @@
       }
     }
 
+    function transformTurtle(turtle) {
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      return turtle;
+    }
+
     //function for markers
     function processMarkers(queryString, store, mapid) {
       return new Promise ((resolve, reject) => {
@@ -86,37 +96,24 @@
       //return new Promise ((resolve, reject) => {
           // run query
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState == XMLHttpRequest.DONE) 
-          {
-            var remoteGraph = xhr.responseText;
-            store.load("text/n3", remoteGraph, function(err, results) {   
-              if (err) {
-                console.log("There was a problem while loading the graph: ", err);
-              } else {
-                var query1 = 'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX dbr:  <http://dbpedia.org/resource/> \
-                \
-                SELECT ?name ?lat ?long\
-                WHERE \
-                {\
-                  ?subject rdfs:label ?name.\
-                  ?subject geo:lat ?lat.\
-                  ?subject geo:long ?long.\
-                }';
-                store.execute(query1, function(err, results) {
-                  // process results
-                  console.log(results);
-                });
-              }
+        let xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+            let remoteGraph = xhr.responseText;
+            remoteGraph = transformTurtle(remoteGraph);
+
+            console.log('////////////////////////////////////remote');
+            console.log(remoteGraph);
+            console.log('////////////////////////////////////remote');
+            rdfstore.create(function(err, store2) {
+              store2.load('text/turtle', remoteGraph, function(err, results) {
+                if(err){
+                  console.log('///////////err');
+                  console.log(err);
+                  console.log('///////////err');
+                }
+
+              });
             });
           }
         }
