@@ -76,7 +76,10 @@
               popup += "<br>"+results[i].extraInfo.value;
             }
             
-            popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';
+            /*Show more button*/
+            popup += '<br><p><center><p onclick="RDF2Map.myFunc(this)" class="requestButton"' + 'value="' +
+                      results[i].subject.value + '" style="color:blue;cursor:pointer;"' +
+                      '"><b>Show More</b></p></center></p>';
 
             let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
             markers.push(marker);
@@ -311,7 +314,7 @@
             let mapid = RDF2Map.map._container.id;
             //RDF2Map.map.remove();
             //RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
-            
+                     
             let promises = [];
             promises.push(processMarkers(queryPoints, store, mapid)); 
             promises.push(processIcons(queryIcons, store, mapid));
@@ -337,16 +340,18 @@
               if (markers.length > 1){
                 RDF2Map.map.fitBounds(markerGroup.getBounds());  
               }
-              
             });
           }
         });
       });
     }
-  
+    RDF2Map.myFunc = function (elem){
+      console.log(elem);
+      $(elem).remove();
+    }
+
     return RDF2Map;
   }
-
   if (typeof(RDF2Map) === 'undefined') {
     window.RDF2Map = defineRDF2Map();
   }
