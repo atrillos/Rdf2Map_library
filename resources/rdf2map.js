@@ -9,6 +9,48 @@
       map: null
     };
 
+    //atrillos
+    RDF2Map.preLoadRDFData = function (fileInputId) {
+      let preLoadQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?subject ?type\
+                WHERE \
+                {\
+                  ?subject ngeo:Geometry ?type.\
+                }`
+      //read ttl file
+      document.getElementById(fileInputId).onchange = function() {
+        let file = this.files[0];
+        let reader = new FileReader();
+        reader.onload = function(progressEvent){
+          // Entire file
+          let vocabulary = this.result;
+          rdfstore.create(function(err, preLoadStore) {
+            preLoadStore.load("text/turtle", vocabulary, function(err, results) {   
+              if(err){
+                console.log("Error preLoading data:",err);
+              }else{
+                preLoadStore.execute(preLoadQuery, function (err, preLoadConcepts) {
+                  console.log("Concepts in ttl file: ",preLoadConcepts);                    
+                  getInfoSubjects(preLoadConcepts);  
+                });
+              }
+            });
+          });
+        };  
+        reader.readAsText(file);
+      };      
+    }
+
+
     RDF2Map.loadRDF = function (fileInputId, map) {
       RDF2Map.map = map;
       //read ttl file
@@ -42,6 +84,16 @@
       }
     }
 
+    function transformTurtle(turtle) {
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      return turtle;
+    }
+
     //function for markers
     function processMarkers(queryString, store, mapid) {
       return new Promise ((resolve, reject) => {
@@ -57,7 +109,6 @@
           }).addTo(RDF2Map.map);
           let markers = [];
           // Chunked Loading enabled for performance
-          // let markers = L.markerClusterGroup({chunckedLoading: true});
           for (let i = 0; i < results.length; i++) {
             let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
@@ -67,9 +118,9 @@
               popup += "<br>"+results[i].extraInfo.value;
             }
             
+            popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';
+
             let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
-            //markersArray.push(marker);
-            //markers.addLayer(marker);
             markers.push(marker);
           }
           // Uncomment for debugging.
@@ -82,104 +133,61 @@
     }
 
     //atrillos
-    function getInfoSubjects(queryString, store, mapid) {
-      //return new Promise ((resolve, reject) => {
-          // run query
-        store.execute(queryString, function (err, results) {
-          console.log('///////////res');
-          console.log(results[1].subject.value);
-          console.log('///////////res');
-          rdfstore.create(function(err, store2) {
-            console.log('///////////////store2');
-            store2.load('remote', 'https://dbpedia.org/resource/Limkheda', function(err, results) {
-              if(err){
-                console.log('///////////err');
-                console.log(err);
-                console.log('///////////err');
-              }
-              console.log('///////////////store2');
-              console.log(results);
-              console.log('///////////////store2');
-            });
-          });
-          /*
-          store.load('remote', '<http://dbpedia.org/data/Bonn.n3>', function(err, results) {
-            if(err){
-              console.log(err);
-            }else{
-              rdfstore.cr
-              console.log('////////////remote');
-              console.log(results);
-              console.log('////////////remote');
-            }
-          });
-          */
-          /*
-          for (let i = 0; i <= results.length - 1; i++) { 
-            results[i];
-            console.log('///////////res');
-          }
-          */
-          /*L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-            maxZoom: 50,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-              '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-              'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            id: 'mapbox.streets'
-          }).addTo(RDF2Map.map);*/
+    function getInfoSubjects(preLoadConcepts) {
+      let geoConcepts = [];
 
-          //i am testing with the example from the rdfstore-js github
-          //error : Uncaught DOMException: Failed to execute 'open' on 'XMLHttpRequest': Invalid URL
-          /*store.execute('LOAD <http://dbpedialite.org/titles/Lisp_%28programming_language%29>\
-                   INTO GRAPH <lisp>', function(err){
-
-            if(err) {
-              var query = 'PREFIX foaf:<http://xmlns.com/foaf/0.1/> SELECT ?o \
-                     FROM NAMED <lisp> { GRAPH <lisp> { ?s foaf:page ?o} }';
-              store.execute(query, function(err, results) {
-                console.log(results);
-                // process results
+      let getLatLongQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?subject ?name ?lat ?long\
+                WHERE \
+                {\
+                  ?subject rdfs:label ?name;\
+                  geo:lat ?lat;\
+                  geo:long ?long.\
+                  FILTER (lang(?name)= 'en')
+                }`
+      
+      let xhr = new XMLHttpRequest();
+      let allGraphs;
+      
+      for(let i = 0; i < preLoadConcepts.length; i++){
+        xhr.open('GET', preLoadConcepts[i].subject.value, true);
+        xhr.setRequestHeader("Accept", "text/turtle");
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState == XMLHttpRequest.DONE) {
+            var remoteGraph = transformTurtle(xhr.responseText);
+            remoteGraph += remoteGraph;
+            rdfstore.create(function(err, store2) { 
+              store2.load('text/turtle', remoteGraph, function(err, results) {
+                if(err){
+                  console.log("Not working...",err);
+                }else{
+                  store2.execute(getLatLongQuery, function (err, concepts) {
+                    //console.log(concepts);  
+                    console.log("After request and store.execute: ",concepts);
+                  });
+                }
               });
-            }
-          });*/
-
-          /*store.graph('http://dbpedia.org/data/Bonn.n3', function(err, graph){
-            // process graph
-            console.log(graph);
-          });*/
-
-          /*store.load('remote', '<http://dbpedia.org/data/Bonn.n3>', function(err, results) {
-            if(err){
-              console.log(err);
-            }else{
-              console.log(results);
-            } 
-          });*/
-          //3 different forms and none of them works :(
-
-          /*let markers = [];
-          // Chunked Loading enabled for performance
-          // let markers = L.markerClusterGroup({chunckedLoading: true});
-          for (let i = 0; i < results.length; i++) {
-            let popup = "<b>"+results[i].name.value+"</b>";
-            if (results[i].link != null) {
-              popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
-            }
-            if(results[i].extraInfo != null) {
-              popup += "<br>"+results[i].extraInfo.value;
-            }
-            
-            let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
-            //markersArray.push(marker);
-            //markers.addLayer(marker);
-            markers.push(marker);
+            });
           }
-          // Uncomment for debugging.
-          // printResults(results);
-          resolve(markers);*/
-        });      
-      //});
+          console.log("mmmm",allGraphs);
+        }
+        
+        xhr.send(null);
+      }   
+
+      
+      //addLocationPoints(geoConcepts);  
     }
+    
 
     //function for icons
     function processIcons(queryString, store, mapid) {
@@ -204,8 +212,8 @@
           });
           
           let markers = [];
+
           // Chunked Loading enabled for performance
-          // let markers = L.markerClusterGroup({chunckedLoading: true});
           for(let i = 0; i < results.length; i++){
             let marker;
             let popup = "<b>"+results[i].name.value+"</b>";
@@ -215,13 +223,14 @@
             if (results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
             }
+            popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';
+            popup += '<br><img src="spinner.gif">';
 
             if(results[i].iconURL == null) {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).bindPopup(popup);
             } else {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).bindPopup(popup);
             }
-            // markers.addLayer(marker);
             markers.push(marker);
           }
 
@@ -283,7 +292,7 @@
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
                 PREFIX dbr:  <http://dbpedia.org/resource/> \
                 \
-                SELECT ?name ?lat ?long ?extrainfo ?link\
+                SELECT ?subject ?name ?lat ?long ?extrainfo ?link\
                 WHERE \
                 {\
                   ?subject rdfs:label ?name;\
@@ -303,7 +312,7 @@
                 PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
                 \
-                SELECT ?name ?lat ?long ?type ?typeIcon ?iconURL ?link ?extrainfo\
+                SELECT ?subject ?name ?lat ?long ?type ?typeIcon ?iconURL ?link ?extrainfo\
                 WHERE \
                 {\
                   ?subject ngeo:Geometry lgd:Icon;\
@@ -326,7 +335,7 @@
                 PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
                 \
-                SELECT ?name ?lat ?long\
+                SELECT ?subject ?name ?lat ?long\
                 WHERE \
                 {\
                   ?subject ngeo:Geometry ngeo:Polygon;
@@ -382,8 +391,6 @@
             //RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
             
             let promises = [];
-            getInfoSubjects(getSubjects,store,mapid);
-            /*
             promises.push(processMarkers(queryPoints, store, mapid)); 
             promises.push(processIcons(queryIcons, store, mapid));
             promises.push(processPolygon(polygonsQuery, store, mapid)); 
@@ -410,7 +417,6 @@
               }
               
             });
-            */
           }
         });
       });

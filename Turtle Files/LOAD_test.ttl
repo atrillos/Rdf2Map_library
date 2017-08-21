@@ -1,5 +1,13 @@
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix dbp: <http://dbpedia.org/page/> .
+@prefix ex: <http://example.org/resources/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lgd: <http://linkedgeodata.org/ontology/>.
 
-<http://dbpedia.org/page/Germany> ngeo:Geometry geo:Point.
+<http://dbpedia.org/resource/Germany> ngeo:Geometry geo:Point.
+<http://dbpedia.org/resource/Bonn> ngeo:Geometry geo:Point.
+#ex:Station1 rdfs:label "Bonn Hauptbahnhof";
+#	ngeo:Geometry lgd:Icon ;
+#	geo:lat "50.7323"; 
+#   geo:long "7.0970".
