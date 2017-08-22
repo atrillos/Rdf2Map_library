@@ -6,7 +6,8 @@
     // initialize    
     let RDF2Map = {
       vocabulary: null,
-      map: null
+      map: null,
+      store: null
     };
 
     /* 
@@ -129,7 +130,7 @@
         
         let concepts = '';
         for (let i = 0; i < subjects.length; i++) {
-          concepts = concepts + subjects[i];
+          concepts = concepts + '<' + subjects[i] + '>';
           if (i != subjects.length - 1) {
             concepts = concepts + '+';
           }
@@ -334,14 +335,19 @@
 
       // create graph store
       rdfstore.create(function(err, store) {
-        store.load("text/turtle", vocabulary, function(err, results) {   
+        RDF2Map.store = store;
+        RDF2Map.store.load("text/turtle", vocabulary, function(err, results) {   
           if (err) {
             console.log("store load error", err);
             console.log("Could not Run SPARQL Query:", err.message);
           } else {
             
             let mapid = RDF2Map.map._container.id;
-            getInfoSubjects(['dbr:British_Ceylon','dbr:Dutch_Ceylon']);            
+            getSubjectsAndLoad(RDF2Map.store)
+            .then((res) => {
+              getInfoSubjects(res);
+            });
+            
             //RDF2Map.map.remove();
             //RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
             /*         
@@ -380,6 +386,40 @@
 
     return RDF2Map;
   }
+
+  function getSubjectsAndLoad(store) {
+      let preLoadQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?subject ?type\
+                WHERE \
+                {\
+                  ?subject ngeo:Geometry ?type.\
+               }`;
+
+        return new Promise( (resolve, reject) => {
+          store.execute(preLoadQuery, function(err, results) {
+            if (err) {
+              console.error(err);
+              reject(err);
+            }
+            let res = []
+            for (let i = 0; i < results.length; i++){
+              res.push(results[i].subject.value);   
+            }
+            resolve(res);
+          });
+        });
+
+        
+    }
   if (typeof(RDF2Map) === 'undefined') {
     window.RDF2Map = defineRDF2Map();
   }
