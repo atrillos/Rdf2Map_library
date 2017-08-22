@@ -25,6 +25,13 @@
                 WHERE \
                 {\
                   ?subject ngeo:Geometry ?geometry.\
+                  FILTER NOT EXISTS { \
+                    ?subject ngeo:posList ?posList. \
+                   }\
+                   FILTER NOT EXISTS { \
+                    ?subject geo:lat ?lat. \
+                   }\
+                   
                 }`
       RDF2Map.map = map;
       let mapid = RDF2Map.map._container.id;
