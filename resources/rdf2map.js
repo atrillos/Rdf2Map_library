@@ -107,7 +107,7 @@
       });
     }
 
-    function getInfoSubjects() {
+    function getInfoSubjects(subjects) {
 
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
@@ -126,25 +126,7 @@
             });
           }
         }
-        /*
-        let request = 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org';
-
-        let prefixes = "prefix dbo:<http://dbpedia.org/ontology/> prefix ngeo:<http://geovocab.org/geometry#> prefix dbr:<http://dbpedia.org/resource/>";
-        let construct = "CONSTRUCT { ?concept rdfs:label ?name; geo:lat ?lat; geo:long ?long; ngeo:Geometry geo:Point.}";
-        let where = "WHERE{ VALUES ?concept {dbr:British_Ceylon } ?concept geo:lat ?lat; geo:long ?long; rdfs:label ?name. FILTER(langMatches(lang(?name), \"en\"))}";
-
-        let query = prefixes + construct + where; 
-        query = "dbr:British_Ceylon";
-        let encoded_query = encodeURI(query);
-
-        let post = "&format=text%2Fturtle&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+";
-
-        request = request + query + post;
-        console.log('/////////////encUR');
-        console.log(encoded_query);
-        console.log('/////////////encUR');
-        //Bdbr%3ABritish_Ceylon
-        */
+        
 
         let pre = 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=prefix+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0Aprefix+ngeo%3A+%3Chttp%3A%2F%2Fgeovocab.org%2Fgeometry%23%3E%0D%0Aprefix+dbr%3A%09%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0A%0D%0ACONSTRUCT+%7B+%0D%0A%3Fconcept+rdfs%3Alabel+%3Fname%3B%0D%0A+geo%3Alat+%3Flat+%3B+%0D%0A+geo%3Along+%3Flong+%3B%0D%0A+ngeo%3AGeometry+geo%3APoint.%0D%0A%7DWHERE%7B%0D%0AVALUES+%3Fconcept+%7B';
         let concepts = "dbr:British_Ceylon+dbr:Dutch_Ceylon+dbr:Kirghiz_Soviet_Socialist_Republic"
