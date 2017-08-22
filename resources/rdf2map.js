@@ -9,6 +9,20 @@
       map: null
     };
 
+    /* 
+      Function to extract information from a resource in the map.
+    */
+    RDF2Map.extractRemoteInfo = function (elem){
+      console.log(elem);
+      $(elem).remove();
+    }
+
+
+    /*
+      Function to load the elements of the file into the map.
+      Input: mapId, fileInputId
+
+    */
     RDF2Map.loadRDF = function (fileInputId, map) {
       RDF2Map.map = map;
       //read ttl file
@@ -77,7 +91,7 @@
             }
             
             /*Show more button*/
-            popup += '<br><p><center><p onclick="RDF2Map.myFunc(this)" class="requestButton"' + 'value="' +
+            popup += '<br><p><center><p onclick="RDF2Map.extractRemoteInfo(this))" class="requestButton"' + 'value="' +
                       results[i].subject.value + '" style="color:blue;cursor:pointer;"' +
                       '"><b>Show More</b></p></center></p>';
 
@@ -99,6 +113,9 @@
         xhr.onreadystatechange = () => {
           if (xhr.readyState == XMLHttpRequest.DONE) {
             let remoteGraph = xhr.responseText;
+            console.log('////////////////////');
+            console.log(remoteGraph);
+            console.log('////////////////////');
             remoteGraph = transformTurtle(remoteGraph);
             rdfstore.create(function(err, store2) {
               store2.load('text/turtle', remoteGraph, function(err, results) {
@@ -109,7 +126,31 @@
             });
           }
         }
-        xhr.open('GET', 'http://dbpedia.org/resource/Germany', true);
+        /*
+        let request = 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org';
+
+        let prefixes = "prefix dbo:<http://dbpedia.org/ontology/> prefix ngeo:<http://geovocab.org/geometry#> prefix dbr:<http://dbpedia.org/resource/>";
+        let construct = "CONSTRUCT { ?concept rdfs:label ?name; geo:lat ?lat; geo:long ?long; ngeo:Geometry geo:Point.}";
+        let where = "WHERE{ VALUES ?concept {dbr:British_Ceylon } ?concept geo:lat ?lat; geo:long ?long; rdfs:label ?name. FILTER(langMatches(lang(?name), \"en\"))}";
+
+        let query = prefixes + construct + where; 
+        query = "dbr:British_Ceylon";
+        let encoded_query = encodeURI(query);
+
+        let post = "&format=text%2Fturtle&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+";
+
+        request = request + query + post;
+        console.log('/////////////encUR');
+        console.log(encoded_query);
+        console.log('/////////////encUR');
+        //Bdbr%3ABritish_Ceylon
+        */
+
+        let pre = 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=prefix+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0Aprefix+ngeo%3A+%3Chttp%3A%2F%2Fgeovocab.org%2Fgeometry%23%3E%0D%0Aprefix+dbr%3A%09%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0A%0D%0ACONSTRUCT+%7B+%0D%0A%3Fconcept+rdfs%3Alabel+%3Fname%3B%0D%0A+geo%3Alat+%3Flat+%3B+%0D%0A+geo%3Along+%3Flong+%3B%0D%0A+ngeo%3AGeometry+geo%3APoint.%0D%0A%7DWHERE%7B%0D%0AVALUES+%3Fconcept+%7B';
+        let concepts = "dbr:British_Ceylon+dbr:Dutch_Ceylon+dbr:Kirghiz_Soviet_Socialist_Republic"
+        let post = '%7D%0D%0A%3Fconcept+geo%3Alat+%3Flat%3B%0D%0Ageo%3Along+%3Flong%3B%0D%0Ardfs%3Alabel+%3Fname.%0D%0AFILTER%28langMatches%28lang%28%3Fname%29%2C+%22en%22%29%29%0D%0A%7D%0D%0A&format=text%2Fturtle&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
+        //xhr.open('GET', 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=prefix+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0Aprefix+ngeo%3A+%3Chttp%3A%2F%2Fgeovocab.org%2Fgeometry%23%3E%0D%0Aprefix+dbr%3A%09%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0A%0D%0ACONSTRUCT+%7B+%0D%0A%3Fconcept+rdfs%3Alabel+%3Fname%3B%0D%0A+geo%3Alat+%3Flat+%3B+%0D%0A+geo%3Along+%3Flong+%3B%0D%0A+ngeo%3AGeometry+geo%3APoint.%0D%0A%7DWHERE%7B%0D%0AVALUES+%3Fconcept+%7Bdbr:British_Ceylon+dbr:Dutch_Ceylon+dbr:Kirghiz_Soviet_Socialist_Republic%7D%0D%0A%3Fconcept+geo%3Alat+%3Flat%3B%0D%0Ageo%3Along+%3Flong%3B%0D%0Ardfs%3Alabel+%3Fname.%0D%0AFILTER%28langMatches%28lang%28%3Fname%29%2C+%22en%22%29%29%0D%0A%7D%0D%0A&format=text%2Fturtle&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+', true);
+        xhr.open('GET', pre + concepts + post, true);
         xhr.setRequestHeader("Accept", "text/turtle");
         xhr.send(null);
     }
@@ -312,9 +353,10 @@
           } else {
             
             let mapid = RDF2Map.map._container.id;
+            getInfoSubjects();            
             //RDF2Map.map.remove();
             //RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
-                     
+            /*         
             let promises = [];
             promises.push(processMarkers(queryPoints, store, mapid)); 
             promises.push(processIcons(queryIcons, store, mapid));
@@ -341,14 +383,12 @@
                 RDF2Map.map.fitBounds(markerGroup.getBounds());  
               }
             });
+            */   
           }
         });
       });
     }
-    RDF2Map.myFunc = function (elem){
-      console.log(elem);
-      $(elem).remove();
-    }
+
 
     return RDF2Map;
   }
