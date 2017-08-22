@@ -10,7 +10,7 @@
     };
 
     //atrillos
-    RDF2Map.preLoadRDFData = function (fileInputId) {
+    RDF2Map.preLoadRDFData = function (fileInputId,map) {
       let preLoadQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
                 PREFIX ex: <http://example.org/>  \
@@ -21,11 +21,13 @@
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
                 PREFIX dbr:  <http://dbpedia.org/resource/> \
                 \
-                SELECT ?subject ?type\
+                SELECT ?subject ?geometry\
                 WHERE \
                 {\
-                  ?subject ngeo:Geometry ?type.\
+                  ?subject ngeo:Geometry ?geometry.\
                 }`
+      RDF2Map.map = map;
+      let mapid = RDF2Map.map._container.id;
       //read ttl file
       document.getElementById(fileInputId).onchange = function() {
         let file = this.files[0];
@@ -40,14 +42,14 @@
               }else{
                 preLoadStore.execute(preLoadQuery, function (err, preLoadConcepts) {
                   console.log("Concepts in ttl file: ",preLoadConcepts);                    
-                  getInfoSubjects(preLoadConcepts);  
+                  getInfoSubjects(preLoadConcepts,mapid);  
                 });
               }
             });
           });
         };  
         reader.readAsText(file);
-      };      
+      };       
     }
 
 
@@ -94,6 +96,240 @@
       return turtle;
     }
 
+    //trillos
+    function getInfoSubjects(preLoadConcepts,mapid) {
+      let geoConcepts = new Array();
+      let xhr = new Array();
+      let getLatLongQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?subject ?name ?lat ?long ?depiction ?homepage\
+                WHERE \
+                {\
+                  ?subject rdfs:label ?name;\
+                  geo:lat ?lat;\
+                  geo:long ?long;\
+                  foaf:depiction ?depiction;\
+                  foaf:homepage ?homepage.\
+                  FILTER (lang(?name)= 'en')
+                }`
+      
+      for(let i = 0; i < preLoadConcepts.length; i++){
+        (function(i){
+          xhr[i] = new XMLHttpRequest();
+          xhr[i].open('GET', preLoadConcepts[i].subject.value, true);
+          xhr[i].setRequestHeader("Accept", "text/turtle");
+          xhr[i].onreadystatechange = () => {
+            if (xhr[i].readyState == XMLHttpRequest.DONE) {
+              var remoteGraph = transformTurtle(xhr[i].responseText);
+              rdfstore.create(function(err, store2) { 
+                store2.load('text/turtle', remoteGraph, function(err, results) {
+                  if(err){
+                    console.log("Not working...",err);
+                  }else{
+                    //console.log(remoteGraph);
+                    store2.execute(getLatLongQuery, function (err, concepts) {                        
+                      console.log("After request and store.execute: ",concepts);
+                      switch(preLoadConcepts[i].geometry.value){
+                        case 'http://www.w3.org/2003/01/geo/wgs84_pos#Point':
+                          drawMarkers(concepts,mapid);
+                          break;
+                        case 'http://geovocab.org/geometry#Polygon': 
+                          drawPolygon(concepts,mapid);
+                          break;
+                        case 'http://linkedgeodata.org/ontology/Icon':
+                          drawIcons(concepts,mapid);
+                          break;
+                        case 'http://linkedgeodata.org/ontology/Path':
+                          drawPath(concepts,mapid);
+                          break;
+                      }
+                    });
+                  }
+                });
+              });
+            }
+          }
+          xhr[i].send(null);
+        })(i);
+      } 
+
+    }
+    
+    //trillos
+    function drawMarkers(concepts, mapid) {
+      //return new Promise ((resolve, reject) => {
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+          maxZoom: 50,
+          attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+          id: 'mapbox.streets'
+        }).addTo(RDF2Map.map);
+
+        console.log(concepts);
+        let markers = [];
+        // Chunked Loading enabled for performance
+        for (let i = 0; i < concepts.length; i++) {
+          let popup = "<b>"+concepts[i].name.value+"</b><br><a href='"+concepts[i].homepage.value+"' target='_blank'>"+concepts[i].homepage.value+"</a>";
+          /*if (results[i].link != null) {
+            popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
+          }
+          if(results[i].extraInfo != null) {
+            popup += "<br>"+results[i].extraInfo.value;
+          }
+          
+          popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';*/
+
+          let marker = L.marker([concepts[i].lat.value, concepts[i].long.value]).bindPopup(popup).addTo(mymap);
+          markers.push(marker);
+        }
+        // Uncomment for debugging.
+        // printResults(results);
+        //resolve(markers);
+        
+      
+      //});
+    }
+    //trillos
+    function drawIcons(concepts, mapid) {
+      //return new Promise ((resolve, reject) => {
+        // run query
+        //store.execute(queryString, function (err, results) {
+
+          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 50,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+              '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+              'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(RDF2Map.map);
+
+          //Define dimensions of specific icon type
+          var customIcon = L.Icon.extend({
+            options: {
+                iconSize:     [30, 30],
+                popupAnchor:  [0, -7]
+            }
+          });
+          
+          let markers = [];
+
+          // Chunked Loading enabled for performance
+          for(let i = 0; i < concepts.length; i++){
+            let marker;
+            let popup = "<b>"+concepts[i].name.value+"</b><br><a href='"+concepts[i].homepage.value+"' target='_blank'>"+concepts[i].homepage.value+"</a>";
+            /*if (results[i].link != null) {
+              popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
+            }  
+            if (results[i].extraInfo != null) {
+              popup += "<br>"+results[i].extraInfo.value;
+            }
+            popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';
+            popup += '<br><img src="spinner.gif">';*/
+
+            
+            marker = L.marker([concepts[i].lat.value, concepts[i].long.value], {icon: new customIcon({iconUrl: concepts[i].depiction.value})}).bindPopup(popup).addTo(mymap);
+            
+            markers.push(marker);
+          }
+
+          // Uncomment for debugging.
+          // printResults(results);
+          //resolve(markers);
+        //});
+      //});
+    }
+    //trillos
+    function drawPolygon(concepts, mapid) {
+      //return new Promise( (resolve, reject) => {
+        // run query
+        //store.execute(queryString, function (err, results) {
+          
+          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 50,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+              '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+              'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(RDF2Map.map);
+          let polygons = [];
+          let popup;
+          // Grouping the coordinates by polygon
+          for(let i = 0; i < concepts.length; i++) {
+            let name = concepts[i].name.value;
+            if (!polygons[name]) {
+              polygons[name] = [];
+            }
+            let latlong = [concepts[i].lat.value, concepts[i].long.value];
+            popup = "<b>"+concepts[i].name.value+"</b><br><a href='"+concepts[i].homepage.value+"' target='_blank'>"+concepts[i].homepage.value+"</a>";
+            polygons[name].push(latlong);
+            console.log(concepts[i].lat.value, concepts[i].long.value)
+          }
+
+          let markers = [];
+          for (let polygonName in polygons) {
+            
+            let marker = L.polygon(polygons[polygonName]).addTo(RDF2Map.map).bindPopup(popup).addTo(mymap);
+            markers.push(marker);
+          }
+
+          //resolve(markers);
+          // Uncomment for debugging.
+          //printResults(results);
+        //});
+      //});
+    }
+    //trillos
+    function drawPath(concepts, mapid) {                   
+      //return new Promise( (resolve, reject) => {
+        // run query
+        //store.execute(queryString, function (err, results) {
+          
+          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 50,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+              '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+              'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(RDF2Map.map);
+          let popup;
+        
+          let pointsPath = [];
+          let markers = [];
+          let point = [];
+          for (var i = 0; i < concepts.length; i++) 
+          {            
+            popup = "<b>"+concepts[i].name.value+"</b><br><a href='"+concepts[i].homepage.value+"' target='_blank'>"+concepts[i].homepage.value+"</a>";
+            point = [concepts[i].lat.value, concepts[i].long.value];
+            pointsPath.push(point);
+            console.log(pointsPath);
+            /*if(concepts[i].color != null)
+            {
+              var marker = L.polyline(concepts, {color: concepts[i].color.value}).addTo(RDF2Map.map).bindPopup(popup).addTo(mymap);
+            } else{
+              var marker = L.polyline(concepts).addTo(RDF2Map.map).bindPopup(popup);
+            }  */ 
+
+          }
+          let marker = L.polyline(pointsPath).addTo(mymap).bindPopup(popup);                       
+          markers.push(marker);
+          
+          //resolve(markers);
+          // Uncomment for debugging.
+          //printResults(results);
+        //});
+      //});
+    }
+
     //function for markers
     function processMarkers(queryString, store, mapid) {
       return new Promise ((resolve, reject) => {
@@ -131,64 +367,7 @@
       
       });
     }
-
-    //atrillos
-    function getInfoSubjects(preLoadConcepts) {
-      let geoConcepts = [];
-
-      let getLatLongQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX dbr:  <http://dbpedia.org/resource/> \
-                \
-                SELECT ?subject ?name ?lat ?long\
-                WHERE \
-                {\
-                  ?subject rdfs:label ?name;\
-                  geo:lat ?lat;\
-                  geo:long ?long.\
-                  FILTER (lang(?name)= 'en')
-                }`
-      
-      let xhr = new XMLHttpRequest();
-      let allGraphs;
-      
-      for(let i = 0; i < preLoadConcepts.length; i++){
-        xhr.open('GET', preLoadConcepts[i].subject.value, true);
-        xhr.setRequestHeader("Accept", "text/turtle");
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState == XMLHttpRequest.DONE) {
-            var remoteGraph = transformTurtle(xhr.responseText);
-            remoteGraph += remoteGraph;
-            rdfstore.create(function(err, store2) { 
-              store2.load('text/turtle', remoteGraph, function(err, results) {
-                if(err){
-                  console.log("Not working...",err);
-                }else{
-                  store2.execute(getLatLongQuery, function (err, concepts) {
-                    //console.log(concepts);  
-                    console.log("After request and store.execute: ",concepts);
-                  });
-                }
-              });
-            });
-          }
-          console.log("mmmm",allGraphs);
-        }
-        
-        xhr.send(null);
-      }   
-
-      
-      //addLocationPoints(geoConcepts);  
-    }
     
-
     //function for icons
     function processIcons(queryString, store, mapid) {
       return new Promise ((resolve, reject) => {
