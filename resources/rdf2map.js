@@ -109,7 +109,7 @@
     }
 
     function getInfoSubjects(subjects) {
-
+      return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
           if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -118,13 +118,8 @@
             console.log(remoteGraph);
             console.log('////////////////////');
             remoteGraph = transformTurtle(remoteGraph);
-            rdfstore.create(function(err, store2) {
-              store2.load('text/turtle', remoteGraph, function(err, results) {
-                if(err){
-                }
-                console.log('DONE');
-              });
-            });
+
+            resolve(remoteGraph);
           }
         }
         
@@ -136,12 +131,13 @@
           }
         }
         let pre = 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=prefix+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0Aprefix+ngeo%3A+%3Chttp%3A%2F%2Fgeovocab.org%2Fgeometry%23%3E%0D%0Aprefix+dbr%3A%09%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0A%0D%0ACONSTRUCT+%7B+%0D%0A%3Fconcept+rdfs%3Alabel+%3Fname%3B%0D%0A+geo%3Alat+%3Flat+%3B+%0D%0A+geo%3Along+%3Flong+%3B%0D%0A+ngeo%3AGeometry+geo%3APoint.%0D%0A%7DWHERE%7B%0D%0AVALUES+%3Fconcept+%7B';
-        //let concepts = "dbr:British_Ceylon+dbr:Dutch_Ceylon+dbr:Kirghiz_Soviet_Socialist_Republic"
+
         let post = '%7D%0D%0A%3Fconcept+geo%3Alat+%3Flat%3B%0D%0Ageo%3Along+%3Flong%3B%0D%0Ardfs%3Alabel+%3Fname.%0D%0AFILTER%28langMatches%28lang%28%3Fname%29%2C+%22en%22%29%29%0D%0A%7D%0D%0A&format=text%2Fturtle&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+';
         //xhr.open('GET', 'http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=prefix+dbo%3A+%3Chttp%3A%2F%2Fdbpedia.org%2Fontology%2F%3E%0D%0Aprefix+ngeo%3A+%3Chttp%3A%2F%2Fgeovocab.org%2Fgeometry%23%3E%0D%0Aprefix+dbr%3A%09%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F%3E%0D%0A%0D%0ACONSTRUCT+%7B+%0D%0A%3Fconcept+rdfs%3Alabel+%3Fname%3B%0D%0A+geo%3Alat+%3Flat+%3B+%0D%0A+geo%3Along+%3Flong+%3B%0D%0A+ngeo%3AGeometry+geo%3APoint.%0D%0A%7DWHERE%7B%0D%0AVALUES+%3Fconcept+%7Bdbr:British_Ceylon+dbr:Dutch_Ceylon+dbr:Kirghiz_Soviet_Socialist_Republic%7D%0D%0A%3Fconcept+geo%3Alat+%3Flat%3B%0D%0Ageo%3Along+%3Flong%3B%0D%0Ardfs%3Alabel+%3Fname.%0D%0AFILTER%28langMatches%28lang%28%3Fname%29%2C+%22en%22%29%29%0D%0A%7D%0D%0A&format=text%2Fturtle&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+', true);
         xhr.open('GET', pre + concepts + post, true);
         xhr.setRequestHeader("Accept", "text/turtle");
         xhr.send(null);
+      });
     }
 
     //function for icons
@@ -345,7 +341,37 @@
             let mapid = RDF2Map.map._container.id;
             getSubjectsAndLoad(RDF2Map.store)
             .then((res) => {
-              getInfoSubjects(res);
+              return getInfoSubjects(res);
+            }).then((res) => {
+              RDF2Map.store.load("text/turtle", res, function(err, results) {
+                if (err) console.error(err);
+                let promises = [];
+                promises.push(processMarkers(queryPoints, store, mapid)); 
+                promises.push(processIcons(queryIcons, store, mapid));
+                promises.push(processPolygon(polygonsQuery, store, mapid)); 
+                Promise.all(promises).then((res) => {
+                  
+                  let markers = res.reduce((a, b) => {
+                    return a.concat(b);
+                  });
+
+                  // Create the clusters
+                  let clusters = L.markerClusterGroup({chunckedLoading: true});
+                  for (let i = 0; i < markers.length; i = i + 1) {
+                    clusters.addLayer(markers[i]);
+                  }
+
+                  // Add clusters to map.
+                  RDF2Map.map.addLayer(clusters);
+                  
+                  // Bounds fixed for markers
+                  let markerGroup = new L.featureGroup(markers);
+                  
+                  if (markers.length > 1){
+                    RDF2Map.map.fitBounds(markerGroup.getBounds());  
+                  }
+                });
+              });
             });
             
             //RDF2Map.map.remove();
