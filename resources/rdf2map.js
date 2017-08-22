@@ -32,7 +32,7 @@
         let reader = new FileReader();
         reader.onload = function(progressEvent){
           // Entire file
-          this.vocabulary = this.result;
+          this.vocabulary = transformTurtle(this.result);
           addLocationPoints(this.vocabulary);
 
         };  
@@ -58,6 +58,11 @@
     }
 
     function transformTurtle(turtle) {
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('–', '-');
       turtle = turtle.replace('–', '-');
       turtle = turtle.replace('–', '-');
       turtle = turtle.replace('–', '-');
