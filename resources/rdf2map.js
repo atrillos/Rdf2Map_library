@@ -69,6 +69,11 @@
       turtle = turtle.replace('–', '-');
       turtle = turtle.replace('–', '-');
       turtle = turtle.replace('–', '-');
+      turtle = turtle.replace('‘', '');
+      turtle = turtle.replace('‘', '');
+      turtle = turtle.replace('‘', '');
+      turtle = turtle.replace('‘', '');
+      turtle = turtle.replace('‘', '');
       return turtle;
     }
 
@@ -128,6 +133,18 @@
           }
         }
 
+        // Construction of the concepts
+        let concepts = '';
+        console.log(subjects.length);
+        for (let i = 0; i < 3200/*subjects.length*/; i++) {
+          concepts = concepts + '<' + subjects[i] + '>';
+          if (i != subjects.length - 1) {
+            concepts = concepts + ' ';
+          }
+        }
+
+
+        // Query to send to dbpedia
         let query = `
           prefix dbo: <http://dbpedia.org/ontology/>
           prefix ngeo: <http://geovocab.org/geometry#>
@@ -138,7 +155,7 @@
            geo:lat ?lat; 
            geo:long ?long.
           }WHERE{
-          VALUES ?concept {` + 'dbr:Venezuela dbr:Germany' + `}
+          VALUES ?concept {` + concepts + `}
           ?concept geo:lat ?lat;
           geo:long ?long;
           rdfs:label ?name.
@@ -146,47 +163,25 @@
           }
         `;
 
-
-        /*
-        let concepts = '';
-        for (let i = 0; i < subjects.length; i++) {
-          concepts = concepts + '' + subjects[i] + '>';
-          if (i != subjects.length - 1) {
-            concepts = concepts + '+';
-          }
-        }*/
+        // Setting uri to be requested (dbpedia)
         let uri = "http://dbpedia.org/sparql/";
 
-        
-        /*let bla = pre + concepts + post;
-        console.log('//////bla');
-        console.log(bla);
-        console.log('//////bla');*/
         xhr.open('POST', uri, true);
-        /*console.log('//////////length');
-        console.log(concepts.length);
-        console.log('//////////length');*/
+        // Setting header of the request
         xhr.setRequestHeader("Accept", "text/turtle");
+
+        // Creation of the request body.
         let request_body = new FormData();
         request_body.append('query', query);
         request_body.append('format', 'text/turtle');
         request_body.append('default-graph-uri', 'http://dbpedia.org');
-        request_body.append('timeout', 30000);
+        request_body.append('timeout', 3000000);
         request_body.append('debug', 'on');
         request_body.append('run', 'Run Query');
-        /*let request_body = {
-          'query': query,
-          'format': 'text/turtle',
-          'default-graph-uri': 'http://dbpedia.org',
-          'CXML_redir_for_subjs': 121,
-          'timeout': 3000,
-          'debug': 'on',
-          'run': 'Run Query'
-        };*/
-        console.log('/////////bra');
-        console.log(request_body);
-        console.log('/////////bra');
+        
+        // Send the request
         xhr.send(request_body);
+
       });
     }
 
@@ -389,12 +384,16 @@
           } else {
             
             let mapid = RDF2Map.map._container.id;
-            getSubjectsAndLoad(RDF2Map.store)
-            .then((res) => {
+            // Obtain the subjects from the file.
+            getSubjectsAndLoad(RDF2Map.store).then((res) => {
+              // get the remote information of this subject if they appear.
               return getInfoSubjects(res);
             }).then((res) => {
+              // Once the information is obtained, load it into the store.
               RDF2Map.store.load("text/turtle", res, function(err, results) {
                 if (err) console.error(err);
+
+                // Process markers, Icons and Polygons.
                 let promises = [];
                 promises.push(processMarkers(queryPoints, store, mapid)); 
                 promises.push(processIcons(queryIcons, store, mapid));
