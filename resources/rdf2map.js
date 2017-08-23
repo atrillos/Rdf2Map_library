@@ -12,23 +12,32 @@
 
     /*
       Function to load the elements of the file into the map.
-      Input: mapId, fileInputId
+      Input: mapId, fileInputId, refresh (set to true if you don't want to keep previous layers)
 
     */
-    RDF2Map.loadRDF = function (fileInputId, map) {
+    RDF2Map.loadRDF = function (fileInputId, map, refresh = false) {
+
       RDF2Map.map = map;
+
       //read ttl file
       document.getElementById(fileInputId).onchange = function() {
         let file = this.files[0];
         let reader = new FileReader();
         reader.onload = function(progressEvent){
+          // If refresh is enabled, just remove the previous map keeping the same center.
+          if (refresh) {
+            let center = RDF2Map.map.getCenter();
+            RDF2Map.map.remove();
+            RDF2Map.map = L.map(mapid).setView([center.lat, center.lng], 13);
+          }
           // Entire file
           this.vocabulary = transformTurtle(this.result);
           addLocationPoints(this.vocabulary);
 
         };  
         reader.readAsText(file);
-      };      
+      };
+            
     }
 
     function printResults(results){
