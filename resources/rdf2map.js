@@ -124,19 +124,15 @@
         xhr.onreadystatechange = () => {
           if (xhr.readyState == XMLHttpRequest.DONE) {
             let remoteGraph = xhr.responseText;
-            console.log('////////////////////');
-            console.log(remoteGraph);
-            console.log('////////////////////');
             remoteGraph = transformTurtle(remoteGraph);
 
             resolve(remoteGraph);
           }
         }
 
-        // Construction of the concepts
+        // Construction of the concepts string to add it to the query
         let concepts = '';
-        console.log(subjects.length);
-        for (let i = 0; i < 3200/*subjects.length*/; i++) {
+        for (let i = 0; i < subjects.length; i++) { 
           concepts = concepts + '<' + subjects[i] + '>';
           if (i != subjects.length - 1) {
             concepts = concepts + ' ';
@@ -361,19 +357,6 @@
                   geo:long ?long.\
                 }`
 
-        let getSubjects = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX dbpedia: <http://dbpedia.org/ontology/>\
-                SELECT ?subject\
-                WHERE \
-                {\
-                  ?subject ?property ?object.\
-                }`
-
       // create graph store
       rdfstore.create(function(err, store) {
         RDF2Map.store = store;
@@ -385,12 +368,27 @@
             
             let mapid = RDF2Map.map._container.id;
             // Obtain the subjects from the file.
-            getSubjectsAndLoad(RDF2Map.store).then((res) => {
-              // get the remote information of this subject if they appear.
-              return getInfoSubjects(res);
-            }).then((res) => {
+            getSubjects(RDF2Map.store).then((subjects) => {
+
+              // Split the subjects in chunks of 3200 so the request doesn't exceed the limit of concepts.
+              let chunk = 3200;
+              let splitted_subjects_array = [];
+              for (let i=0; i< subjects.length; i+=chunk) {
+                let temparray = subjects.slice(i,i+chunk);
+                splitted_subjects_array.push(temparray);
+              }
+              // 
+              let promise_array = [];
+              for (let i = 0; i < splitted_subjects_array.length; i++) {
+                promise_array.push(getInfoSubjects(splitted_subjects_array[i]));
+              }
+              // get the remote information of the subjects for each chunk simultaneously. 
+              // (if the subject is remotely reachable)
+              return Promise.all(promise_array); //getInfoSubjects(subjects);
+            }).then((turtles) => {
+              
               // Once the information is obtained, load it into the store.
-              RDF2Map.store.load("text/turtle", res, function(err, results) {
+              RDF2Map.store.load("text/turtle", turtles.join(''), function(err, results) {
                 if (err) console.error(err);
 
                 // Process markers, Icons and Polygons.
@@ -422,37 +420,6 @@
                 });
               });
             });
-            
-            //RDF2Map.map.remove();
-            //RDF2Map.map = L.map(mapid).setView([50.7374, 7.0982], 13);
-            /*         
-            let promises = [];
-            promises.push(processMarkers(queryPoints, store, mapid)); 
-            promises.push(processIcons(queryIcons, store, mapid));
-            promises.push(processPolygon(polygonsQuery, store, mapid)); 
-            Promise.all(promises).then((res) => {
-              
-              let markers = res.reduce((a, b) => {
-                return a.concat(b);
-              });
-
-              // Create the clusters
-              let clusters = L.markerClusterGroup({chunckedLoading: true});
-              for (let i = 0; i < markers.length; i = i + 1) {
-                clusters.addLayer(markers[i]);
-              }
-
-              // Add clusters to map.
-              RDF2Map.map.addLayer(clusters);
-              
-              // Bounds fixed for markers
-              let markerGroup = new L.featureGroup(markers);
-              
-              if (markers.length > 1){
-                RDF2Map.map.fitBounds(markerGroup.getBounds());  
-              }
-            });
-            */   
           }
         });
       });
@@ -462,7 +429,7 @@
     return RDF2Map;
   }
 
-  function getSubjectsAndLoad(store) {
+  function getSubjects(store) {
       let preLoadQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
                 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
                 PREFIX ex: <http://example.org/>  \
