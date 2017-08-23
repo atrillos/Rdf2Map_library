@@ -10,15 +10,6 @@
       store: null
     };
 
-    /* 
-      Function to extract information from a resource in the map.
-    */
-    RDF2Map.extractRemoteInfo = function (elem){
-      console.log(elem);
-      $(elem).remove();
-    }
-
-
     /*
       Function to load the elements of the file into the map.
       Input: mapId, fileInputId
@@ -57,6 +48,7 @@
       }
     }
 
+    // Function to replace characters that are unreadable by the rdfstore
     function transformTurtle(turtle) {
       turtle = turtle.replace('–', '-');
       turtle = turtle.replace('–', '-');
@@ -100,11 +92,6 @@
             if(results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
             }
-            
-            /*Show more button*/
-            popup += '<br><p><center><p onclick="RDF2Map.extractRemoteInfo(this))" class="requestButton"' + 'value="' +
-                      results[i].subject.value + '" style="color:blue;cursor:pointer;"' +
-                      '"><b>Show More</b></p></center></p>';
 
             let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
             markers.push(marker);
@@ -215,8 +202,6 @@
             if (results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
             }
-            popup += '<br><center><button type="button" ' + 'value="' + results[i].subject.value + '">Show More</button></center>';
-            popup += '<br><img src="spinner.gif">';
 
             if(results[i].iconURL == null) {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).bindPopup(popup);
@@ -272,6 +257,41 @@
       });
     }
 
+  // Function that return the subjects in the store.
+  function getSubjects(store) {
+      let preLoadQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
+                PREFIX ex: <http://example.org/>  \
+                PREFIX ngeo: <http://geovocab.org/geometry#> \
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
+                PREFIX dcterms: <http://purl.org/dc/terms/>\
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
+                PREFIX dbr:  <http://dbpedia.org/resource/> \
+                \
+                SELECT ?subject ?type\
+                WHERE \
+                {\
+                  ?subject ngeo:Geometry ?type.\
+               }`;
+
+        return new Promise( (resolve, reject) => {
+          // Execute the query to retrieve the subjects
+          store.execute(preLoadQuery, function(err, results) {
+            if (err) {
+              console.error(err);
+              reject(err);
+            }
+            let res = []
+            for (let i = 0; i < results.length; i++){
+              // Obtain the values and store them in the res array.
+              res.push(results[i].subject.value);   
+            }
+            resolve(res);
+          });
+        });
+  }
+  
     function addLocationPoints(vocabulary) {
 
       let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
@@ -429,40 +449,8 @@
     return RDF2Map;
   }
 
-  function getSubjects(store) {
-      let preLoadQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                PREFIX dbr:  <http://dbpedia.org/resource/> \
-                \
-                SELECT ?subject ?type\
-                WHERE \
-                {\
-                  ?subject ngeo:Geometry ?type.\
-               }`;
-
-        return new Promise( (resolve, reject) => {
-          store.execute(preLoadQuery, function(err, results) {
-            if (err) {
-              console.error(err);
-              reject(err);
-            }
-            let res = []
-            for (let i = 0; i < results.length; i++){
-              res.push(results[i].subject.value);   
-            }
-            resolve(res);
-          });
-        });
-
-        
-    }
   if (typeof(RDF2Map) === 'undefined') {
     window.RDF2Map = defineRDF2Map();
   }
+
 })(window);
