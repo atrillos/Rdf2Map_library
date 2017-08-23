@@ -3,14 +3,12 @@
 @prefix ex: <http://example.org/> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
-@prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix dbpedia: <http://dbpedia.org/ontology/>.
 
 ex:Polygon1 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:University ;
-	rdfs:label "Hofgarten";
+	foaf:name "Hofgarten";
+	foaf:homepage "";
 	ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
 _:blank1 geo:lat "50.7342023"; 
     geo:long "7.1042202".
@@ -22,8 +20,8 @@ _:blank4 geo:lat "50.7328772";
     geo:long "7.1065424".
 
 ex:Polygon2 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:Park;
-	rdfs:label "Freizeitpark Rheinaue";
+	foaf:name "Freizeitpark Rheinaue";
+	foaf:homepage "";
 	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank5 geo:lat "50.718048"; 
 geo:long "7.133254".
@@ -37,8 +35,8 @@ _:blank9 geo:lat "50.715457";
 geo:long "7.129790".
 
 ex:Polygon3 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:Park;
-	rdfs:label "Sudfriedhof";
+	foaf:name "Sudfriedhof";
+	foaf:homepage "";
 	ngeo:posList _:blank10, _:blank11, _:blank12, _:blank13, _:blank14, _:blank15, _:blank16.
 _:blank10 geo:lat "50.706478"; 
 geo:long "7.121922".
@@ -56,8 +54,8 @@ _:blank16 geo:lat "50.704986";
 geo:long "7.119312".
 
 ex:Polygon4 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:Country;
-	rdfs:label "Berlin";
+	foaf:name "Berlin";
+	foaf:homepage "";
 	ngeo:posList _:blank17, _:blank18, _:blank19, _:blank20, _:blank21, _:blank22, _:blank23, _:blank24, _:blank25, _:blank26, _:blank27, _:blank28, _:blank29.
 _:blank17 geo:long	"13.699737950000014";
 geo:lat	"52.377883".

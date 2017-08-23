@@ -1,6 +1,7 @@
 @prefix ns0:	<http://geovocab.org/geometry#> .
 @prefix dbr:	<http://dbpedia.org/resource/> .
 @prefix geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
 dbr:Abbasid_Caliphate	ns0:Geometry	geo:Point .
 dbr:Almohad_Caliphate	ns0:Geometry	geo:Point .
 dbr:Arab_League	ns0:Geometry	geo:Point .

@@ -3,85 +3,82 @@
 @prefix ex: <http://example.org/> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
-@prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
-lgd:Station ex:hasIcon "http://i.imgur.com/9xgY08t.png".
-lgd:Museum ex:hasIcon "http://i.imgur.com/pEAHIEr.png".
-lgd:Sport ex:hasIcon "http://i.imgur.com/qV7kKnZ.png".
-lgd:Restaurant ex:hasIcon "http://i.imgur.com/ApKizlU.png".
-
-
-ex:Restauran1 rdf:type lgd:Restaurant;
-	rdfs:label "Rocco";
-    rdfs:comment "Rocco Restaurant";
-	ngeo:Geometry lgd:Icon ;
+ex:Restauran1 ngeo:Geometry lgd:Icon;
+	foaf:name "Rocco";
+	foaf:homepage "";
+    foaf:depiction "http://i.imgur.com/ApKizlU.png";
 	geo:lat "50.736802"; 
 	geo:long "7.097079".
 
-ex:Restauran2 rdf:type lgd:Restaurant;
-	rdfs:label "Mc Donald's";
-    rdfs:comment "Mc Donald's Friedensplatz";
-	ngeo:Geometry lgd:Icon ;
+ex:Restauran2 ngeo:Geometry lgd:Icon;
+	foaf:name "Mc Donald's";
 	geo:lat "50.736097"; 
 	geo:long "7.098149";
+	foaf:homepage "";
 	foaf:depiction "http://i.imgur.com/YYUfavi.png".
 
-ex:Station1 rdf:type lgd:Station ;
-	rdfs:label "Bonn Hauptbahnhof";
-    rdfs:comment "Address: Am Hauptbahnhof 1, 53111 Bonn";
-	ngeo:Geometry lgd:Icon ;
+ex:Station1 ngeo:Geometry lgd:Icon;
+	foaf:name "Bonn Hauptbahnhof";
+	foaf:homepage "";
 	geo:lat "50.7323"; 
-    geo:long "7.0970".
+    geo:long "7.0970";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
-ex:Station2 rdf:type lgd:Station ;
-	rdfs:label "Haltestelle Pariser Strasse";
-    rdfs:comment "Address: 53117 Bonn";
-	ngeo:Geometry lgd:Icon ;
+ex:Station2 ngeo:Geometry lgd:Icon;
+	foaf:name "Haltestelle Pariser Strasse";
+    foaf:homepage "";
 	geo:lat "50.7551657";
-    geo:long "7.0769269".
+    geo:long "7.0769269";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
-ex:Station3 rdf:type lgd:Station ;
-	rdfs:label "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
-	ngeo:Geometry lgd:Icon ;
+ex:Station3 ngeo:Geometry lgd:Icon;
+	foaf:name "Stadtbahnhaltestelle Konrad-Adenauer-Platz";
+	foaf:homepage "";
 	geo:lat "50.739649"; 
-    geo:long "7.11829".
+    geo:long "7.11829";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
-ex:Station4 rdf:type lgd:Station ;
-	rdfs:label "Haltestelle Stadthaus";
-	ngeo:Geometry lgd:Icon ;
+ex:Station4 ngeo:Geometry lgd:Icon;
+	foaf:name "Haltestelle Stadthaus";
+	foaf:homepage "";
 	geo:lat "50.7366769";
-    geo:long "7.0954426".
+    geo:long "7.0954426";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
-ex:Museum1 rdf:type lgd:Museum;
-	rdfs:label "Academic Museum";
-	ngeo:Geometry lgd:Icon;
+ex:Museum1 ngeo:Geometry lgd:Icon;
+	foaf:name "Academic Museum";
+	foaf:homepage "";
 	geo:lat "50.731812"; 
-    geo:long "7.106313".
+    geo:long "7.106313";
+    foaf:depiction "http://i.imgur.com/pEAHIEr.png".
 
-ex:Museum2 rdf:type lgd:Museum;
-	rdfs:label "Beethoven-Haus Bonn";
+ex:Museum2 ngeo:Geometry lgd:Icon;
+	foaf:name "Beethoven-Haus Bonn";
 	foaf:homepage "http://www.beethoven-haus-bonn.de/sixcms/detail.php?template=portal_en";
-	ngeo:Geometry lgd:Icon ;
 	geo:lat "50.7369";
-    geo:long "7.1012".
+    geo:long "7.1012";
+    foaf:depiction "http://i.imgur.com/pEAHIEr.png".
 
-ex:SportPark1 rdf:type lgd:Sport;
-	rdfs:label "SPORTPARK Ennert";
-	ngeo:Geometry lgd:Icon ;
+ex:SportPark1 ngeo:Geometry lgd:Icon;
+	foaf:name "SPORTPARK Ennert";
+	foaf:homepage "";
 	geo:lat "50.738974";
-    geo:long "7.159512".
+    geo:long "7.159512";
+    foaf:depiction "http://i.imgur.com/qV7kKnZ.png".
 
-ex:SportPark2 rdf:type lgd:Sport;
-	rdfs:label "Sportpark Nord";
-	ngeo:Geometry lgd:Icon ;
+ex:SportPark2 ngeo:Geometry lgd:Icon;
+	foaf:name "Sportpark Nord";
+	foaf:homepage "";
 	geo:lat "50.747954";
-    geo:long "7.083307".
+    geo:long "7.083307";
+    foaf:depiction "http://i.imgur.com/qV7kKnZ.png".
 
 ex:Polygon1 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:University ;
-	rdfs:label "Hofgarten";
+	foaf:name "Hofgarten";
+	foaf:homepage "";
 	ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
 _:blank1 geo:lat "50.7342023"; 
     geo:long "7.1042202".
@@ -93,8 +90,8 @@ _:blank4 geo:lat "50.7328772";
     geo:long "7.1065424".
 
 ex:Polygon2 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:Park;
-	rdfs:label "Freizeitpark Rheinaue";
+	foaf:name "Freizeitpark Rheinaue";
+	foaf:homepage "";
 	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank5 geo:lat "50.718048"; 
 geo:long "7.133254".
@@ -108,8 +105,8 @@ _:blank9 geo:lat "50.715457";
 geo:long "7.129790".
 
 ex:Polygon3 ngeo:Geometry ngeo:Polygon;
-	rdf:type lgd:Park;
-	rdfs:label "Sudfriedhof";
+	foaf:name "Sudfriedhof";
+	foaf:homepage "";
 	ngeo:posList _:blank10, _:blank11, _:blank12, _:blank13, _:blank14, _:blank15, _:blank16.
 _:blank10 geo:lat "50.706478"; 
 geo:long "7.121922".
@@ -126,21 +123,21 @@ geo:long "7.122121".
 _:blank16 geo:lat "50.704986"; 
 geo:long "7.119312".
 
-ex:City1 rdf:type lgd:City;
-	rdfs:label "Bonn";
-	ngeo:Geometry geo:Point;
+ex:City1 ngeo:Geometry geo:Point;
+	foaf:name "Bonn";
+	foaf:homepage "";
 	geo:lat "50.7374"; 
     geo:long "7.0982".
 
-ex:City2 rdf:type lgd:City;
-	rdfs:label "Siegburg";
-	ngeo:Geometry geo:Point;
+ex:City2 ngeo:Geometry geo:Point;
+	foaf:name "Siegburg";
+	foaf:homepage "";
 	geo:lat "50.7998"; 
     geo:long "7.2075".
 
-ex:City4 rdf:type lgd:City;
-	rdfs:label "Königswinter";
-	ngeo:Geometry geo:Point;
+ex:City4 ngeo:Geometry geo:Point;
+	foaf:name "Königswinter";
+	foaf:homepage "";
 	geo:lat "50.6920"; 
     geo:long "7.1862".
 

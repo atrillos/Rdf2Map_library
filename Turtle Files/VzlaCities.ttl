@@ -3,68 +3,67 @@
 @prefix ex: <http://example.org/> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
-@prefix dcterms: <http://purl.org/dc/terms/>.
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 
-ex:City1 rdf:type lgd:City;
-	rdfs:label "Maracaibo";
-	ngeo:Geometry geo:Point;
+ex:City1 ngeo:Geometry geo:Point;
+	foaf:name "Maracaibo";
+	foaf:homepage "";
 	geo:lat "10.660833"; 
     geo:long "-71.733685".
 
-ex:City2 rdf:type lgd:City;
-	rdfs:label "San Cristobal";
-	ngeo:Geometry geo:Point;
+ex:City2 ngeo:Geometry geo:Point;
+	foaf:name "San Cristobal";
+	foaf:homepage "";
 	geo:lat "7.745627"; 
     geo:long "-72.215066".
 
-ex:City3 rdf:type lgd:City;
-	rdfs:label "Porlamar";
-	ngeo:Geometry geo:Point;
+ex:City3 ngeo:Geometry geo:Point;
+	foaf:name "Porlamar";
+	foaf:homepage "";
 	geo:lat "10.957360"; 
     geo:long "-63.884727".
 
-ex:City4 rdf:type lgd:City;
-	rdfs:label "Caracas";
-	ngeo:Geometry geo:Point;
+ex:City4 ngeo:Geometry geo:Point;
+	foaf:name "Caracas";
+	foaf:homepage "";
 	rdfs:comment "Capital City.";
 	geo:lat "10.480248"; 
     geo:long "-66.930217".
 
-ex:City5 rdf:type lgd:City;
-	rdfs:label "Ciudad Bolivar";
-	ngeo:Geometry geo:Point;
+ex:City5 ngeo:Geometry geo:Point;
+	foaf:name "Ciudad Bolivar";
+	foaf:homepage "";
 	geo:lat "8.114092"; 
     geo:long "-63.556032".
 
-ex:City6 rdf:type lgd:City;
-	rdfs:label "Merida";
-	ngeo:Geometry geo:Point;
+ex:City6 ngeo:Geometry geo:Point;
+	foaf:name "Merida";
+	foaf:homepage "";
 	geo:lat "8.648314"; 
     geo:long "-71.151908".
 
-ex:City7 rdf:type lgd:City;
-	rdfs:label "Maturin";
-	ngeo:Geometry geo:Point;
+ex:City7 ngeo:Geometry geo:Point;
+	foaf:name "Maturin";
+	foaf:homepage "";
 	geo:lat "9.723314"; 
     geo:long "-63.160039".
 
-ex:City8 rdf:type lgd:City;
-	rdfs:label "Barquisimeto";
-	ngeo:Geometry geo:Point;
+ex:City8 ngeo:Geometry geo:Point;
+	foaf:name "Barquisimeto";
+	foaf:homepage "";
 	geo:lat "10.060224"; 
     geo:long "-69.360938".
 
-ex:City9 rdf:type lgd:City;
-	rdfs:label "Valencia";
-	ngeo:Geometry geo:Point;
+ex:City9 ngeo:Geometry geo:Point;
+	foaf:name "Valencia";
+	foaf:homepage "";
 	geo:lat "10.148827"; 
     geo:long "-68.019960".
 
-ex:City10 rdf:type lgd:City;
-	rdfs:label "Puerto la Cruz";
-	ngeo:Geometry geo:Point;
+ex:City10 ngeo:Geometry geo:Point;
+	foaf:name "Puerto la Cruz";
+	foaf:homepage "";
 	geo:lat "10.201976"; 
     geo:long "-64.627015".

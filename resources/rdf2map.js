@@ -13,7 +13,6 @@
     /*
       Function to load the elements of the file into the map.
       Input: mapId, fileInputId, refresh (set to true if you don't want to keep previous layers)
-
     */
     RDF2Map.loadRDF = function (fileInputId, map, refresh = false) {
 
@@ -94,13 +93,14 @@
           let markers = [];
           // Chunked Loading enabled for performance
           for (let i = 0; i < results.length; i++) {
-            let popup = "<b>"+results[i].name.value+"</b>";
+            let popup = "<b>"+results[i].name.value+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
+            /*let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
               popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
             }
             if(results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
-            }
+            }*/
 
             let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
             markers.push(marker);
@@ -115,13 +115,14 @@
     }
 
     function getInfoSubjects(subjects) {
+
       return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
           if (xhr.readyState == XMLHttpRequest.DONE) {
             let remoteGraph = xhr.responseText;
             remoteGraph = transformTurtle(remoteGraph);
-
+            
             resolve(remoteGraph);
           }
         }
@@ -143,15 +144,19 @@
           prefix dbr: <http://dbpedia.org/resource/>
 
           CONSTRUCT { 
-          ?concept rdfs:label ?name;
-           geo:lat ?lat; 
-           geo:long ?long.
-          }WHERE{
-          VALUES ?concept {` + concepts + `}
-          ?concept geo:lat ?lat;
-          geo:long ?long;
-          rdfs:label ?name.
-          FILTER(langMatches(lang(?name), "en"))
+            ?concept foaf:name ?name;
+              geo:lat ?lat; 
+              geo:long ?long;
+              foaf:depiction ?depiction;
+              foaf:homepage ?homepage.
+          } WHERE {
+            VALUES ?concept {` + concepts + `}
+            ?concept geo:lat ?lat;
+              foaf:name ?name;
+              geo:long ?long;
+              foaf:depiction ?depiction;
+              foaf:homepage ?homepage.
+            FILTER(langMatches(lang(?name), "en"))
           }
         `;
 
@@ -182,7 +187,7 @@
       return new Promise ((resolve, reject) => {
         // run query
         store.execute(queryString, function (err, results) {
-
+          //console.log(results);
           L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 50,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -204,19 +209,20 @@
           // Chunked Loading enabled for performance
           for(let i = 0; i < results.length; i++){
             let marker;
-            let popup = "<b>"+results[i].name.value+"</b>";
+            let popup = "<b>"+results[i].name.value+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
+            /*let popup = "<b>"+results[i].name.value+"</b>";
             if (results[i].link != null) {
               popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
             }  
             if (results[i].extraInfo != null) {
               popup += "<br>"+results[i].extraInfo.value;
-            }
-
-            if(results[i].iconURL == null) {
+            }*/
+            marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].depiction.value})}).bindPopup(popup);
+            /*if(results[i].iconURL == null) {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).bindPopup(popup);
             } else {
               marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).bindPopup(popup);
-            }
+            }*/
             markers.push(marker);
           }
 
@@ -232,7 +238,6 @@
       return new Promise( (resolve, reject) => {
         // run query
         store.execute(queryString, function (err, results) {
-          
           L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 50,
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -254,11 +259,53 @@
 
           let markers = [];
           for (let polygonName in polygons) {
+            //let popup = "<b>"+polygonName+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
             let popup = "<b>" + polygonName + "</b>";
             let marker = L.polygon(polygons[polygonName]).addTo(RDF2Map.map).bindPopup(popup);
             markers.push(marker);
           }
 
+          resolve(markers);
+          // Uncomment for debugging.
+          //printResults(results);
+        });
+      });
+    }
+
+    //function for paths
+    function processPath(queryString, store, mapid) {
+      return new Promise( (resolve, reject) => {
+        // run query
+        store.execute(queryString, function (err, results) {
+          
+          L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 50,
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+              '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+              'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets'
+          }).addTo(RDF2Map.map);
+          let paths = {};
+
+          // Grouping the coordinates by polygon
+          for(let i = 0; i < results.length; i++) {
+            let name = results[i].name.value;
+            // let homepage = results[i].homepage.value;
+            // let colorTxt = results[i].color.value;
+            if (!paths[name]) {
+              paths[name] = [];
+            }
+            let latlong = [results[i].lat.value, results[i].long.value];
+            paths[name].push(latlong);
+          }
+          let markers = [];
+          for (let pathName in paths) {            
+            //popup = "<b>"+pathName+"</b><br><a href='"+webpage[webpageName].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
+            let popup = "<b>" + pathName + "</b>";
+            let marker = L.polyline(paths[pathName], {color: "red"}).addTo(RDF2Map.map).bindPopup(popup);
+            markers.push(marker);
+            
+          }
           resolve(markers);
           // Uncomment for debugging.
           //printResults(results);
@@ -282,7 +329,7 @@
                 WHERE \
                 {\
                   ?subject ngeo:Geometry ?type.\
-               }`;
+               }`
 
         return new Promise( (resolve, reject) => {
           // Execute the query to retrieve the subjects
@@ -313,79 +360,77 @@
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
                 PREFIX dbr:  <http://dbpedia.org/resource/> \
                 \
-                SELECT ?subject ?name ?lat ?long ?extrainfo ?link\
+                SELECT ?subject ?name ?lat ?long ?homepage\
                 WHERE \
                 {\
-                  ?subject rdfs:label ?name;\
-                  ngeo:Geometry geo:Point;\
-                  geo:lat ?lat;\
-                  geo:long ?long.\
-                  OPTIONAL{?subject rdfs:comment ?extraInfo} \
-                  OPTIONAL{?subject foaf:homepage ?link}\
+                  ?subject foaf:name ?name;\
+                    ngeo:Geometry geo:Point;\
+                    geo:lat ?lat;\
+                    geo:long ?long;\
+                    foaf:homepage ?homepage.\
                 }`
 
-      let queryIcons = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                \
-                SELECT ?subject ?name ?lat ?long ?type ?typeIcon ?iconURL ?link ?extrainfo\
-                WHERE \
-                {\
-                  ?subject ngeo:Geometry lgd:Icon;\
-                  rdf:type ?type;\
-                  rdfs:label ?name;\
-                  geo:lat ?lat;\
-                  geo:long ?long.\
-                  ?type ex:hasIcon ?typeIcon.\
-                  OPTIONAL{?subject foaf:depiction ?iconURL}\
-                  OPTIONAL{?subject rdfs:comment ?extraInfo} \
-                  OPTIONAL{?subject foaf:homepage ?link} \
+      let queryIcons = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> 
+                PREFIX ex: <http://example.org/>  
+                PREFIX ngeo: <http://geovocab.org/geometry#> 
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> 
+                PREFIX dcterms: <http://purl.org/dc/terms/>
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                
+                SELECT ?subject ?name ?lat ?long ?type ?depiction ?homepage
+                WHERE 
+                {
+                  ?subject ngeo:Geometry lgd:Icon;
+                    foaf:name ?name;
+                    geo:lat ?lat;
+                    geo:long ?long;
+                    foaf:homepage ?homepage;
+                    foaf:depiction ?depiction.
                 }`
 
-      let polygonsQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX foaf: <http://xmlns.com/foaf/0.1/>\
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
-                \
-                SELECT ?subject ?name ?lat ?long\
-                WHERE \
-                {\
+      let polygonsQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> 
+                PREFIX ex: <http://example.org/>  
+                PREFIX ngeo: <http://geovocab.org/geometry#> 
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> 
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                
+                SELECT ?subject ?name ?lat ?long ?homepage
+                WHERE 
+                {
                   ?subject ngeo:Geometry ngeo:Polygon;
-                  rdfs:label ?name;\
-                  ngeo:posList ?position.\
-                  ?position geo:lat ?lat;\
-                  geo:long ?long.\
-                  OPTIONAL{?subject rdfs:comment ?extraInfo} \
-                  OPTIONAL{?subject foaf:homepage ?link} \
+                    foaf:name ?name;
+                    foaf:homepage ?homepage;
+                    ngeo:posList ?position.
+                  ?position geo:lat ?lat;
+                    geo:long ?long.        
                 }`
 
-        let pathQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
-                PREFIX ex: <http://example.org/>  \
-                PREFIX ngeo: <http://geovocab.org/geometry#> \
-                PREFIX lgd: <http://linkedgeodata.org/ontology/> \
-                PREFIX dcterms: <http://purl.org/dc/terms/>\
-                PREFIX dbpedia: <http://dbpedia.org/ontology/>\
-                \
-                SELECT ?subject ?lat ?long ?color\
-                WHERE \
-                {\
-                  ?subject ngeo:Geometry lgd:Path;\
-                  dbpedia:Colour ?color;\
-                  ngeo:posList ?posList.\
-                  ?posList geo:lat ?lat;\
-                  geo:long ?long.\
+        let pathQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+                PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> 
+                PREFIX ex: <http://example.org/>  
+                PREFIX ngeo: <http://geovocab.org/geometry#> 
+                PREFIX lgd: <http://linkedgeodata.org/ontology/> 
+                PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX dbc: <http://dbpedia.org/page/Category> 
+                
+                SELECT ?subject ?name ?lat ?long ?homepage ?color
+                WHERE 
+                {
+                 ?subject ngeo:Geometry lgd:Path;
+                    foaf:name ?name;
+                    foaf:homepage ?homepage;
+                    dbc:Color ?color;
+                    ngeo:posList ?position.
+                  ?position geo:lat ?lat;
+                    geo:long ?long.
                 }`
 
+    
       // create graph store
       rdfstore.create(function(err, store) {
         RDF2Map.store = store;
@@ -425,6 +470,7 @@
                 promises.push(processMarkers(queryPoints, store, mapid)); 
                 promises.push(processIcons(queryIcons, store, mapid));
                 promises.push(processPolygon(polygonsQuery, store, mapid)); 
+                promises.push(processPath(pathQuery, store, mapid)); 
                 Promise.all(promises).then((res) => {
                   
                   let markers = res.reduce((a, b) => {
