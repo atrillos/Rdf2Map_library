@@ -42,6 +42,13 @@ ex:Station4 foaf:homepage "".
 ex:Station4 geo:lat "50.7907938"; 
     geo:long "7.2005865".
 
+ex:Station5 ngeo:Geometry lgd:Icon;
+    foaf:name "Stadtbahnhaltestelle Bertha-von-Suttner-Platz/Beethovenhaus";
+    foaf:homepage "http://www.swb-busundbahn.de/nc/fahrplaene/haltestellenlageplaene.html";
+    geo:lat "50.737421"; 
+    geo:long "7.102573";
+    foaf:depiction "http://i.imgur.com/9xgY08t.png".
+
 ex:University1 ngeo:Geometry lgd:Icon .
 ex:University1 foaf:name "Universität Bonn".
 ex:University1 foaf:homepage "https://www.uni-bonn.de".
@@ -51,6 +58,7 @@ ex:University1 geo:lat "50.7268";
 ex:Polygon1 ngeo:Geometry ngeo:Polygon .
 ex:Polygon1 foaf:name "Hofgarten".
 ex:Polygon1 foaf:homepage "".
+ex:Polygon1 dbpc:Color "green".
 ex:Polygon1 ngeo:posList _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank6 geo:lat "50.7342023"; 
     geo:long "7.1042202".

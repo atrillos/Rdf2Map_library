@@ -4,6 +4,7 @@
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix dbc: <http://dbpedia.org/page/Category> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 ex:Restauran1 ngeo:Geometry lgd:Icon;
@@ -78,6 +79,7 @@ ex:SportPark2 ngeo:Geometry lgd:Icon;
 
 ex:Polygon1 ngeo:Geometry ngeo:Polygon;
 	foaf:name "Hofgarten";
+	dbc:Color "Green";
 	foaf:homepage "";
 	ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
 _:blank1 geo:lat "50.7342023"; 
@@ -91,6 +93,7 @@ _:blank4 geo:lat "50.7328772";
 
 ex:Polygon2 ngeo:Geometry ngeo:Polygon;
 	foaf:name "Freizeitpark Rheinaue";
+	dbc:Color "Green";
 	foaf:homepage "";
 	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank5 geo:lat "50.718048"; 
@@ -106,6 +109,7 @@ geo:long "7.129790".
 
 ex:Polygon3 ngeo:Geometry ngeo:Polygon;
 	foaf:name "Sudfriedhof";
+	dbc:Color "Blue";
 	foaf:homepage "";
 	ngeo:posList _:blank10, _:blank11, _:blank12, _:blank13, _:blank14, _:blank15, _:blank16.
 _:blank10 geo:lat "50.706478"; 

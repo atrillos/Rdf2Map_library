@@ -27,7 +27,8 @@ ex:Station2 foaf:name "Bonn-Beuel station";
 
 ex:Berlin foaf:name "Berlin";
 	ngeo:Geometry ngeo:Polygon ;
-  foaf:homepage "http://www.berlin.de/en/" ;
+  	foaf:homepage "http://www.berlin.de/en/" ;
+  	dbpc:Color "Blue";
 	ngeo:posList _:b01, _:b02, _:b03, _:b04, _:b05, _:b06, _:b07, _:b08, _:b09, _:b10, _:b11, _:b12, _:b13 .
 _:b01 geo:long	"13.699737950000014";
 geo:lat	"52.377883".
