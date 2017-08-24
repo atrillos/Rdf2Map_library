@@ -245,23 +245,28 @@
               'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'mapbox.streets'
           }).addTo(RDF2Map.map);
+
           let polygons = {};
 
           // Grouping the coordinates by polygon
           for(let i = 0; i < results.length; i++) {
             let name = results[i].name.value;
             if (!polygons[name]) {
-              polygons[name] = [];
+              polygons[name] = {
+                'color': results[i].color.value,
+                'latlng': [],
+                'homepage': results[i].homepage.value
+              };
             }
             let latlong = [results[i].lat.value, results[i].long.value];
-            polygons[name].push(latlong);
-          }
+            polygons[name]['latlng'].push(latlong);
+          }          
 
           let markers = [];
           for (let polygonName in polygons) {
             //let popup = "<b>"+polygonName+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
-            let popup = "<b>" + polygonName + "</b>";
-            let marker = L.polygon(polygons[polygonName]).addTo(RDF2Map.map).bindPopup(popup);
+            let popup = "<b>" + polygonName + "</b><br><a href='"+ polygons[polygonName]['homepage'] +"' target='_blank'>"+ polygons[polygonName]['homepage'] +"</a>";
+            let marker = L.polygon(polygons[polygonName]['latlng'], {color: polygons[polygonName]['color']}).addTo(RDF2Map.map).bindPopup(popup);
             markers.push(marker);
           }
 
@@ -397,14 +402,17 @@
                 PREFIX lgd: <http://linkedgeodata.org/ontology/> 
                 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX dbc: <http://dbpedia.org/page/Category> 
                 
-                SELECT ?subject ?name ?lat ?long ?homepage
+                SELECT ?subject ?name ?lat ?long ?homepage ?color
                 WHERE 
                 {
                   ?subject ngeo:Geometry ngeo:Polygon;
+                    ngeo:posList ?position;
                     foaf:name ?name;
                     foaf:homepage ?homepage;
-                    ngeo:posList ?position.
+                    dbc:Color ?color.
+
                   ?position geo:lat ?lat;
                     geo:long ?long.        
                 }`
