@@ -264,7 +264,6 @@
 
           let markers = [];
           for (let polygonName in polygons) {
-            //let popup = "<b>"+polygonName+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
             let popup = "<b>" + polygonName + "</b><br><a href='"+ polygons[polygonName]['homepage'] +"' target='_blank'>"+ polygons[polygonName]['homepage'] +"</a>";
             let marker = L.polygon(polygons[polygonName]['latlng'], {color: polygons[polygonName]['color']}).addTo(RDF2Map.map).bindPopup(popup);
             markers.push(marker);
@@ -295,19 +294,20 @@
           // Grouping the coordinates by polygon
           for(let i = 0; i < results.length; i++) {
             let name = results[i].name.value;
-            // let homepage = results[i].homepage.value;
-            // let colorTxt = results[i].color.value;
             if (!paths[name]) {
-              paths[name] = [];
+              paths[name] = {
+                'color': results[i].color.value,
+                'latlng': [],
+                'homepage': results[i].homepage.value
+              };
             }
             let latlong = [results[i].lat.value, results[i].long.value];
-            paths[name].push(latlong);
+            paths[name]['latlng'].push(latlong);
           }
           let markers = [];
-          for (let pathName in paths) {            
-            //popup = "<b>"+pathName+"</b><br><a href='"+webpage[webpageName].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
-            let popup = "<b>" + pathName + "</b>";
-            let marker = L.polyline(paths[pathName], {color: "red"}).addTo(RDF2Map.map).bindPopup(popup);
+          for (let pathName in paths) {
+            let popup = "<b>" + pathName + "</b><br><a href='"+ paths[pathName]['homepage'] +"' target='_blank'>"+ paths[pathName]['homepage'] +"</a>";
+            let marker = L.polyline(paths[pathName]['latlng'], {color: paths[pathName]['color']}).addTo(RDF2Map.map).bindPopup(popup);
             markers.push(marker);
             
           }
