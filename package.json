@@ -18,6 +18,7 @@
   "homepage": "https://github.com/atrillos/Rdf2Map_library#readme",
   "dependencies": {
     "hapi": "^16.4.3",
-    "inert": "^4.2.0"
+    "inert": "^4.2.0",
+    "mocha": "^3.5.0"
   }
 }
