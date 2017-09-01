@@ -132,7 +132,7 @@ RDF2Map.processMarkers = (store) => {
   });
 }
 
-function getInfoSubjects(subjects) {
+RDF2Map.getInfoSubjects = (subjects) => {
 
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
@@ -459,11 +459,11 @@ function addLocationPoints(vocabulary) {
           // 
           let promise_array = [];
           for (let i = 0; i < splitted_subjects_array.length; i++) {
-            promise_array.push(getInfoSubjects(splitted_subjects_array[i]));
+            promise_array.push(RDF2Map.getInfoSubjects(splitted_subjects_array[i]));
           }
           // get the remote information of the subjects for each chunk simultaneously. 
           // (if the subject is remotely reachable)
-          return Promise.all(promise_array); //getInfoSubjects(subjects);
+          return Promise.all(promise_array);
         }).then((turtles) => {
           
           // Once the information is obtained, load it into the store.
@@ -506,4 +506,4 @@ function addLocationPoints(vocabulary) {
 }
 
 // For testing uncomment the following line.
-//module.exports.RDF2Map = RDF2Map;
+module.exports.RDF2Map = RDF2Map;
