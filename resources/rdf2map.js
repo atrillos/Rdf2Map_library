@@ -75,7 +75,7 @@ function transformTurtle(turtle) {
 }
 
 //function for markers
-RDF2Map.processMarkers = (store, mapid) => {
+RDF2Map.processMarkers = (store) => {
   return new Promise ((resolve, reject) => {
     
     let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
@@ -201,7 +201,7 @@ function getInfoSubjects(subjects) {
 }
 
 //function for icons
-RDF2Map.processIcons = (store, mapid) => {
+RDF2Map.processIcons = (store) => {
   return new Promise ((resolve, reject) => {
 
     let iconsQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
@@ -273,7 +273,7 @@ RDF2Map.processIcons = (store, mapid) => {
 }
 
 //function for polygons
-RDF2Map.processPolygon = (store, mapid) => {
+RDF2Map.processPolygon = (store) => {
   return new Promise( (resolve, reject) => {
     let polygonsQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
             PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> 
@@ -338,7 +338,7 @@ RDF2Map.processPolygon = (store, mapid) => {
 }
 
 //function for paths
-RDF2Map.processPath = (store, mapid) => {
+RDF2Map.processPath = (store) => {
   return new Promise( (resolve, reject) => {
     let pathQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
             PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> 
@@ -472,10 +472,10 @@ function addLocationPoints(vocabulary) {
 
             // Process markers, Icons and Polygons.
             let promises = [];
-            promises.push(RDF2Map.processMarkers(store, mapid)); 
-            promises.push(RDF2Map.processIcons(store, mapid));
-            promises.push(RDF2Map.processPolygon(store, mapid)); 
-            promises.push(RDF2Map.processPath(store, mapid)); 
+            promises.push(RDF2Map.processMarkers(store)); 
+            promises.push(RDF2Map.processIcons(store));
+            promises.push(RDF2Map.processPolygon(store)); 
+            promises.push(RDF2Map.processPath(store)); 
             Promise.all(promises).then((res) => {
               
               let markers = res.reduce((a, b) => {
