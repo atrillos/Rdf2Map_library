@@ -94,8 +94,8 @@ RDF2Map.processMarkers = (store) => {
               ?subject foaf:name ?name;\
                 ngeo:Geometry geo:Point;\
                 geo:lat ?lat;\
-                geo:long ?long;\
-                foaf:homepage ?homepage.\
+                geo:long ?long.\
+                OPTIONAL { ?subject foaf:homepage ?homepage}\
             }`;
 
     // run query
@@ -111,15 +111,9 @@ RDF2Map.processMarkers = (store) => {
       let markers = [];
       // Chunked Loading enabled for performance
       for (let i = 0; i < results.length; i++) {
-        let popup = "<b>"+results[i].name.value+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
-        /*let popup = "<b>"+results[i].name.value+"</b>";
-        if (results[i].link != null) {
-          popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
-        }
-        if(results[i].extraInfo != null) {
-          popup += "<br>"+results[i].extraInfo.value;
-        }*/
-
+        let popup = '<b>' + results[i].name.value + '</b><br>'
+        if (results[i].homepage)
+          popup += '<a href="' + results[i].homepage.value +'" target="_blank">'+results[i].homepage.value+'</a>';
         let marker = L.marker([results[i].lat.value, results[i].long.value]).bindPopup(popup);
         markers.push(marker);
       }
@@ -171,9 +165,9 @@ RDF2Map.getInfoSubjects = (subjects) => {
         VALUES ?concept {` + concepts + `}
         ?concept geo:lat ?lat;
           foaf:name ?name;
-          geo:long ?long;
-          foaf:depiction ?depiction;
-          foaf:homepage ?homepage.
+          geo:long ?long.
+        OPTIONAL { ?concept foaf:depiction ?depiction }
+        OPTIONAL { ?concept foaf:homepage ?homepage }  
         FILTER(langMatches(lang(?name), "en"))
       }
     `;
@@ -219,13 +213,14 @@ RDF2Map.processIcons = (store) => {
               ?subject ngeo:Geometry lgd:Icon;
                 foaf:name ?name;
                 geo:lat ?lat;
-                geo:long ?long;
-                foaf:homepage ?homepage;
-                foaf:depiction ?depiction.
+                geo:long ?long.
+                OPTIONAL {?subject foaf:homepage ?homepage}
+                OPTIONAL {?subject foaf:depiction ?depiction}
             }`;
 
     // run query
     store.execute(iconsQuery, function (err, results) {
+
       //console.log(results);
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 50,
@@ -248,7 +243,10 @@ RDF2Map.processIcons = (store) => {
       // Chunked Loading enabled for performance
       for(let i = 0; i < results.length; i++){
         let marker;
-        let popup = "<b>"+results[i].name.value+"</b><br><a href='"+results[i].homepage.value+"' target='_blank'>"+results[i].homepage.value+"</a>";
+        let popup = '<b>' + results[i].name.value + '</b>';
+        
+        if (results[i].homepage)
+          popup += '<br><a href="' + results[i].homepage.value + '" target="_blank">' + results[i].homepage.value + '</a>';
         /*let popup = "<b>"+results[i].name.value+"</b>";
         if (results[i].link != null) {
           popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
@@ -290,8 +288,8 @@ RDF2Map.processPolygon = (store) => {
               ?subject ngeo:Geometry ngeo:Polygon;
                 ngeo:posList ?position;
                 foaf:name ?name;
-                foaf:homepage ?homepage;
                 dbc:Color ?color.
+                OPTIONAL {?subject foaf:homepage ?homepage}
 
               ?position geo:lat ?lat;
                 geo:long ?long.        
@@ -316,16 +314,24 @@ RDF2Map.processPolygon = (store) => {
           polygons[name] = {
             'color': results[i].color.value,
             'latlng': [],
-            'homepage': results[i].homepage.value
+            // 'homepage': results[i].homepage.value
           };
+
+        // Add the homepage to the polygon object if it has it
+        if (results[i].homepage) 
+          polygons[name].homepage = results[i].homepage.value;
+
         }
+
         let latlong = [results[i].lat.value, results[i].long.value];
         polygons[name]['latlng'].push(latlong);
       }          
 
       let markers = [];
       for (let polygonName in polygons) {
-        let popup = "<b>" + polygonName + "</b><br><a href='"+ polygons[polygonName]['homepage'] +"' target='_blank'>"+ polygons[polygonName]['homepage'] +"</a>";
+        let popup = '<b>' + polygonName + '</b>';
+        if (polygons[polygonName]['homepage'])
+          popup += '<br><a href="' + polygons[polygonName]['homepage'] +'" target="_blank">' + polygons[polygonName]['homepage'] + '</a>';
         let marker = L.polygon(polygons[polygonName]['latlng'], {color: polygons[polygonName]['color']}).addTo(RDF2Map.map).bindPopup(popup);
         markers.push(marker);
       }
@@ -354,11 +360,11 @@ RDF2Map.processPath = (store) => {
             {
              ?subject ngeo:Geometry lgd:Path;
                 foaf:name ?name;
-                foaf:homepage ?homepage;
                 dbc:Color ?color;
                 ngeo:posList ?position.
               ?position geo:lat ?lat;
                 geo:long ?long.
+               OPTIONAL {?subject foaf:homepage ?homepage}
             }`;
     // run query
     store.execute(pathQuery, function (err, results) {
@@ -379,15 +385,22 @@ RDF2Map.processPath = (store) => {
           paths[name] = {
             'color': results[i].color.value,
             'latlng': [],
-            'homepage': results[i].homepage.value
+            // 'homepage': results[i].homepage.value
           };
         }
+
+        if (results[i].homepage)
+          paths[name]['homepage'] = results[i].homepage.value;
+
         let latlong = [results[i].lat.value, results[i].long.value];
         paths[name]['latlng'].push(latlong);
       }
       let markers = [];
       for (let pathName in paths) {
-        let popup = "<b>" + pathName + "</b><br><a href='"+ paths[pathName]['homepage'] +"' target='_blank'>"+ paths[pathName]['homepage'] +"</a>";
+        let popup = '<b>' + pathName + '</b>';
+        if (paths[pathName]['homepage'])
+          popup += '<br><a href="' + paths[pathName]['homepage'] + '" target="_blank">' + paths[pathName]['homepage'] + '</a>';
+
         let marker = L.polyline(paths[pathName]['latlng'], {color: paths[pathName]['color']}).addTo(RDF2Map.map).bindPopup(popup);
         markers.push(marker);
         
