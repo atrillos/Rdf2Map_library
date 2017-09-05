@@ -24,7 +24,6 @@ _:blank4 geo:lat "50.7328772";
 ex:Polygon2 ngeo:Geometry ngeo:Polygon;
 	dbc:Color "Blue";
 	foaf:name "Freizeitpark Rheinaue";
-	foaf:homepage "";
 	ngeo:posList _:blank5, _:blank6, _:blank7, _:blank8, _:blank9.
 _:blank5 geo:lat "50.718048"; 
 geo:long "7.133254".

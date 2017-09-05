@@ -49,7 +49,7 @@ ex:Station5 ngeo:Geometry lgd:Icon;
     geo:long "7.102573";
     foaf:depiction "http://i.imgur.com/9xgY08t.png".
 
-ex:University1 ngeo:Geometry lgd:Icon .
+ex:University1 ngeo:Geometry geo:Point .
 ex:University1 foaf:name "Universität Bonn".
 ex:University1 foaf:homepage "https://www.uni-bonn.de".
 ex:University1 geo:lat "50.7268"; 
