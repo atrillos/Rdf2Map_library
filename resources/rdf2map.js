@@ -1,5 +1,10 @@
 'use strict'
+try {
+  var XMLHttpRequest = require("xhr2").XMLHttpRequest;
+  var FormData = require('form-data');
+}catch(err) {
 
+}
 // initialize    
 let RDF2Map = {
   vocabulary: null,
@@ -11,24 +16,17 @@ let RDF2Map = {
   Function to load the elements of the file into the map.
   Input: mapId, fileInputId, refresh (set to true if you don't want to keep previous layers)
 */
-RDF2Map.loadRDF = function (fileInputId, map, refresh = false) {
-
-  RDF2Map.map = map;
+RDF2Map.bindFileInput = (fileInputId, map, refresh = false) => {
 
   //read ttl file
   document.getElementById(fileInputId).onchange = function() {
     let file = this.files[0];
     let reader = new FileReader();
     reader.onload = function(progressEvent){
-      // If refresh is enabled, just remove the previous map keeping the same center.
-      if (refresh) {
-        let center = RDF2Map.map.getCenter();
-        RDF2Map.map.remove();
-        RDF2Map.map = L.map(mapid).setView([center.lat, center.lng], 13);
-      }
+      
       // Entire file
-      this.vocabulary = transformTurtle(this.result);
-      addLocationPoints(this.vocabulary);
+      let vocabulary = this.result;
+      RDF2Map.loadInMap(vocabulary, map, refresh);
 
     };  
     reader.readAsText(file);
@@ -74,10 +72,77 @@ function transformTurtle(turtle) {
   return turtle;
 }
 
-//function for markers
-RDF2Map.processMarkers = (store) => {
-  return new Promise ((resolve, reject) => {
+RDF2Map.getInfoSubjects = (subjects) => {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        let remoteGraph = xhr.responseText;
+        remoteGraph = transformTurtle(remoteGraph);
+        
+        resolve(remoteGraph);
+      }
+    }
+
+    // Construction of the concepts string to add it to the query
+    let concepts = '';
+    for (let i = 0; i < subjects.length; i++) { 
+      concepts = concepts + '<' + subjects[i] + '>';
+      if (i != subjects.length - 1) {
+        concepts = concepts + ' ';
+      }
+    }
+
+
+    // Query to send to dbpedia
+    let query = `
+      prefix dbo: <http://dbpedia.org/ontology/>
+      prefix ngeo: <http://geovocab.org/geometry#>
+      prefix dbr: <http://dbpedia.org/resource/>
+      prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+      CONSTRUCT { 
+        ?concept foaf:name ?name;
+          geo:lat ?lat; 
+          geo:long ?long;
+          foaf:depiction ?depiction;
+          foaf:homepage ?homepage.
+      } WHERE {
+        VALUES ?concept {` + concepts + `}
+        ?concept geo:lat ?lat;
+          foaf:name ?name;
+          geo:long ?long.
+        OPTIONAL { ?concept foaf:depiction ?depiction }
+        OPTIONAL { ?concept foaf:homepage ?homepage }  
+        FILTER(langMatches(lang(?name), "en"))
+      }
+    `;
+
+    // Setting uri to be requested (dbpedia)
+    let uri = "http://dbpedia.org/sparql/";
+
+    xhr.open('POST', uri, true);
+    // Setting header of the request
+    xhr.setRequestHeader("Accept", "text/turtle");
+
+    // Creation of the request body.
+    let request_body = new FormData();
+    request_body.append('query', query);
+    request_body.append('format', 'text/turtle');
+    request_body.append('default-graph-uri', 'http://dbpedia.org');
+    request_body.append('timeout', 3000000);
+    request_body.append('debug', 'on');
+    request_body.append('run', 'Run Query');
     
+    // Send the request
+    xhr.send(request_body);
+
+  });
+}
+
+//function for markers
+RDF2Map.processPoints = (store) => {
+  return new Promise ((resolve, reject) => {
     let queryPoints = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
             PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
             PREFIX ex: <http://example.org/>  \
@@ -126,74 +191,6 @@ RDF2Map.processMarkers = (store) => {
   });
 }
 
-RDF2Map.getInfoSubjects = (subjects) => {
-
-  return new Promise((resolve, reject) => {
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-        let remoteGraph = xhr.responseText;
-        remoteGraph = transformTurtle(remoteGraph);
-        
-        resolve(remoteGraph);
-      }
-    }
-
-    // Construction of the concepts string to add it to the query
-    let concepts = '';
-    for (let i = 0; i < subjects.length; i++) { 
-      concepts = concepts + '<' + subjects[i] + '>';
-      if (i != subjects.length - 1) {
-        concepts = concepts + ' ';
-      }
-    }
-
-
-    // Query to send to dbpedia
-    let query = `
-      prefix dbo: <http://dbpedia.org/ontology/>
-      prefix ngeo: <http://geovocab.org/geometry#>
-      prefix dbr: <http://dbpedia.org/resource/>
-
-      CONSTRUCT { 
-        ?concept foaf:name ?name;
-          geo:lat ?lat; 
-          geo:long ?long;
-          foaf:depiction ?depiction;
-          foaf:homepage ?homepage.
-      } WHERE {
-        VALUES ?concept {` + concepts + `}
-        ?concept geo:lat ?lat;
-          foaf:name ?name;
-          geo:long ?long.
-        OPTIONAL { ?concept foaf:depiction ?depiction }
-        OPTIONAL { ?concept foaf:homepage ?homepage }  
-        FILTER(langMatches(lang(?name), "en"))
-      }
-    `;
-
-    // Setting uri to be requested (dbpedia)
-    let uri = "http://dbpedia.org/sparql/";
-
-    xhr.open('POST', uri, true);
-    // Setting header of the request
-    xhr.setRequestHeader("Accept", "text/turtle");
-
-    // Creation of the request body.
-    let request_body = new FormData();
-    request_body.append('query', query);
-    request_body.append('format', 'text/turtle');
-    request_body.append('default-graph-uri', 'http://dbpedia.org');
-    request_body.append('timeout', 3000000);
-    request_body.append('debug', 'on');
-    request_body.append('run', 'Run Query');
-    
-    // Send the request
-    xhr.send(request_body);
-
-  });
-}
-
 //function for icons
 RDF2Map.processIcons = (store) => {
   return new Promise ((resolve, reject) => {
@@ -221,7 +218,6 @@ RDF2Map.processIcons = (store) => {
     // run query
     store.execute(iconsQuery, function (err, results) {
 
-      //console.log(results);
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 50,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
@@ -247,19 +243,9 @@ RDF2Map.processIcons = (store) => {
         
         if (results[i].homepage)
           popup += '<br><a href="' + results[i].homepage.value + '" target="_blank">' + results[i].homepage.value + '</a>';
-        /*let popup = "<b>"+results[i].name.value+"</b>";
-        if (results[i].link != null) {
-          popup = popup+"<br><a href='"+results[i].link.value+"' target='_blank'>"+results[i].link.value+"</a>";
-        }  
-        if (results[i].extraInfo != null) {
-          popup += "<br>"+results[i].extraInfo.value;
-        }*/
+
         marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].depiction.value})}).bindPopup(popup);
-        /*if(results[i].iconURL == null) {
-          marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].typeIcon.value})}).bindPopup(popup);
-        } else {
-          marker = L.marker([results[i].lat.value, results[i].long.value], {icon: new customIcon({iconUrl: results[i].iconURL.value})}).bindPopup(popup);
-        }*/
+
         markers.push(marker);
       }
 
@@ -271,7 +257,7 @@ RDF2Map.processIcons = (store) => {
 }
 
 //function for polygons
-RDF2Map.processPolygon = (store) => {
+RDF2Map.processPolygons = (store) => {
   return new Promise( (resolve, reject) => {
     let polygonsQuery = `PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
             PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> 
@@ -293,7 +279,7 @@ RDF2Map.processPolygon = (store) => {
 
               ?position geo:lat ?lat;
                 geo:long ?long.        
-            }`
+            }`;
 
     // run query
     store.execute(polygonsQuery, function (err, results) {
@@ -392,7 +378,7 @@ RDF2Map.processPath = (store) => {
         if (results[i].homepage)
           paths[name]['homepage'] = results[i].homepage.value;
 
-        let latlong = [results[i].lat.value, results[i].long.value];
+        let latlong = [parseFloat(results[i].lat.value), parseFloat(results[i].long.value)];
         paths[name]['latlng'].push(latlong);
       }
       let markers = [];
@@ -403,7 +389,7 @@ RDF2Map.processPath = (store) => {
 
         let marker = L.polyline(paths[pathName]['latlng'], {color: paths[pathName]['color']}).addTo(RDF2Map.map).bindPopup(popup);
         markers.push(marker);
-        
+
       }
       resolve(markers);
       // Uncomment for debugging.
@@ -447,12 +433,22 @@ function getSubjects(store) {
     });
 }
 
-function addLocationPoints(vocabulary) {
+RDF2Map.loadInMap = (vocabulary, mapid, refresh = false) => {
 
+  // Set Map id and Vocabulary
+  RDF2Map.map = mapid;
+  RDF2Map.vocabulary = transformTurtle(vocabulary);
+
+  // If refresh is enabled, just remove the previous map keeping the same center.
+  if (refresh) {
+    let center = RDF2Map.map.getCenter();
+    RDF2Map.map.remove();
+    RDF2Map.map = L.map(mapid).setView([center.lat, center.lng], 13);
+  }
   // create graph store
   rdfstore.create(function(err, store) {
     RDF2Map.store = store;
-    RDF2Map.store.load("text/turtle", vocabulary, function(err, results) {   
+    RDF2Map.store.load("text/turtle", RDF2Map.vocabulary, function(err, results) {   
       if (err) {
         console.log("store load error", err);
         console.log("Could not Run SPARQL Query:", err.message);
@@ -485,9 +481,9 @@ function addLocationPoints(vocabulary) {
 
             // Process markers, Icons and Polygons.
             let promises = [];
-            promises.push(RDF2Map.processMarkers(store)); 
+            promises.push(RDF2Map.processPoints(store)); 
             promises.push(RDF2Map.processIcons(store));
-            promises.push(RDF2Map.processPolygon(store)); 
+            promises.push(RDF2Map.processPolygons(store)); 
             promises.push(RDF2Map.processPath(store)); 
             Promise.all(promises).then((res) => {
               
@@ -518,5 +514,9 @@ function addLocationPoints(vocabulary) {
   });
 }
 
-// For testing uncomment the following line.
-module.exports.RDF2Map = RDF2Map;
+// Avoiding console error when using module.exports
+try {
+  module.exports.RDF2Map = RDF2Map;
+} catch(err) {
+
+}
