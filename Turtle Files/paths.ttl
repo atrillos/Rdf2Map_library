@@ -1,0 +1,38 @@
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix ngeo: <http://geovocab.org/geometry#> .
+@prefix dbp: <http://dbpedia.org/page/> .
+@prefix ex: <http://example.org/resources/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix lgd: <http://linkedgeodata.org/ontology/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix dbpc: <http://dbpedia.org/page/Category> .
+
+
+ex:path1 foaf:name "path from Lisbon to Berlin 1";
+	ngeo:Geometry lgd:Path ;
+	dbpc:Color "green";
+	ngeo:posList _:a01, _:a02, _:a03, _:a04, _:a05.
+	_:a01 geo:long	"-9.142685"; geo:lat "38.736946".
+	_:a02 geo:long	"-3.073790"; geo:lat "40.416775".
+	_:a03 geo:long	"2.294694"; geo:lat "48.858093".
+	_:a04 geo:long	"8.682127"; geo:lat "50.110924".
+	_:a05 geo:long	"13.404954"; geo:lat "52.520008".
+
+ex:path2 foaf:name "path from Lisbon to Berlin 2";
+	ngeo:Geometry lgd:Path ;
+	dbpc:Color "blue";
+	ngeo:posList _:b01, _:b02, _:b03, _:b04.
+	_:b01 geo:long	"-9.142685"; geo:lat "38.736946".
+	_:b02 geo:long	"-8.629932"; geo:lat "41.150223".
+	_:b03 geo:long	"2.294694"; geo:lat "48.858093".
+	_:b04 geo:long	"13.404954"; geo:lat "52.520008".
+
+ex:path3 foaf:name "path from Lisbon to Berlin 3";
+	ngeo:Geometry lgd:Path ;
+	dbpc:Color "red";
+	ngeo:posList _:c01, _:c02, _:c03, _:c04, _:c05.
+	_:c01 geo:long	"-9.142685"; geo:lat "38.736946".
+	_:c02 geo:long	"-0.379709"; geo:lat "39.467689".
+	_:c03 geo:long	"-0.575856"; geo:lat "44.838721".
+	_:c04 geo:long	"7.446362"; geo:lat "46.953647".
+	_:c05 geo:long	"13.404954"; geo:lat "52.520008".
