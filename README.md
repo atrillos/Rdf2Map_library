@@ -211,23 +211,19 @@ ex:Polygon1 ngeo:Geometry ngeo:Polygon;
   foaf:name "Hofgarten";
   foaf:homepage "";
   ngeo:posList _:blank1, _:blank2, _:blank3, _:blank4.
-  _:blank1 geo:lat "50.7342023";
-    geo:long "7.1042202".  
-  _:blank2 geo:lat "50.732454";
-    geo:long "7.1019723".
-  _:blank3 geo:lat "50.7310443";
-    geo:long "7.1047357".
-  _:blank4 geo:lat "50.7328772";
-    geo:long "7.1065424".
+  _:blank1 geo:lat "50.7342023"; geo:long "7.1042202".  
+  _:blank2 geo:lat "50.732454"; geo:long "7.1019723".
+  _:blank3 geo:lat "50.7310443"; geo:long "7.1047357".
+  _:blank4 geo:lat "50.7328772"; geo:long "7.1065424".
 
- ex:path foaf:name "path from Lisbon to Berlin";
- 	ngeo:Geometry lgd:Path ;
- 	dbc:Color "blue";
- 	ngeo:posList _:b01, _:b02, _:b03, _:b04.
- 	_:b01 geo:long	"-9.142685"; geo:lat "38.736946".
- 	_:b02 geo:long	"-8.629932"; geo:lat "41.150223".
- 	_:b03 geo:long	"2.294694"; geo:lat "48.858093".
- 	_:b04 geo:long	"13.404954"; geo:lat "52.520008".
+ex:path foaf:name "path from Lisbon to Berlin";
+  ngeo:Geometry lgd:Path ;
+  dbc:Color "blue";
+  ngeo:posList _:b01, _:b02, _:b03, _:b04.
+  _:b01 geo:long	"-9.142685"; geo:lat "38.736946".
+  _:b02 geo:long	"-8.629932"; geo:lat "41.150223".
+  _:b03 geo:long	"2.294694"; geo:lat "48.858093".
+  _:b04 geo:long	"13.404954"; geo:lat "52.520008".
  ```
 
 
