@@ -154,17 +154,59 @@ RDF2Map.processPaths(myStore)
   })
 ```
 
+## Turtle Files
+
+In general, RDF2Map is able to work with any Turtle Files, but since
+ [RDFStore](https://github.com/antoniogarrote/rdfstore-js) only works with SPARQL
+ 1.0, some considerations must be done.
+
+ In order to process point markers and Icons, you can specify the location of them
+ with the latitude and longitude, the name, the homepage and the depiction as well.
+
+ ```turtle
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix ex: <http://example.org/> .
+@prefix ngeo: <http://geovocab.org/geometry#> .
+@prefix lgd: <http://linkedgeodata.org/ontology/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+ex:example ngeo:Geometry geo:Point;
+ 	foaf:name "San Cristobal";
+ 	foaf:homepage "http://alcaldiadesancristobal.com/";
+ 	geo:lat "7.745627";
+  geo:long "-72.215066".
+
+ex:example2 ngeo:Geometry lgd:Icon;
+ 	foaf:name "Haltestelle Pariser Strasse";
+ 	geo:lat "50.7551657";
+  geo:long "7.0769269";
+  foaf:depiction "http://i.imgur.com/9xgY08t.png".
+
+ ```
+
+ For external reachable concepts you only need to specify its `ngeo:Geometry` and
+ *RDF2Map* will do the rest.
+
+ ```turtle
+@prefix dbr:	<http://dbpedia.org/resource/> .
+@prefix geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix ngeo:	<http://geovocab.org/geometry#> .
+dbr:Germany	ngeo:Geometry	geo:Icon .
+dbr:Ghana	ngeo:Geometry	geo:Point .
+ ```
+
+
 ## Tests
 
 RDF2Map comes with a set of functional tests built in mocha. To run them please
 install all the node dependencies first:
 
-```shell
+```bash
 npm install
 ```
 
 Then you can just simply execute the tests writing:
 
-```
+```bash
 npm test
 ```
