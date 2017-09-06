@@ -23,7 +23,7 @@ global.navigator = {
   platform: []
 };
 // Import leaflet
-let L = require('leaflet');
+global.L = require('leaflet');
 
 describe('RDF2Map', () => {
 

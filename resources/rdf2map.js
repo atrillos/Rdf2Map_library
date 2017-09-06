@@ -1,7 +1,6 @@
 'use strict'
 try {
-  var XMLHttpRequest = require("xhr2").XMLHttpRequest;
-  var FormData = require('form-data');
+  var L = require('leaflet');
 }catch(err) {
 
 }
@@ -165,14 +164,14 @@ RDF2Map.processPoints = (store) => {
 
     // run query
     store.execute(queryPoints, function (err, results) {
-
+      /*
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 50,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
           'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         id: 'mapbox.streets'
-      }).addTo(RDF2Map.map);
+      }).addTo(RDF2Map.map);*/
       let markers = [];
       // Chunked Loading enabled for performance
       for (let i = 0; i < results.length; i++) {
@@ -217,22 +216,25 @@ RDF2Map.processIcons = (store) => {
 
     // run query
     store.execute(iconsQuery, function (err, results) {
-
+      /*
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 50,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
           'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         id: 'mapbox.streets'
-      }).addTo(RDF2Map.map);
+      }).addTo(RDF2Map.map);*/
 
       //Define dimensions of specific icon type
-      var customIcon = L.Icon.extend({
-        options: {
-            iconSize:     [30, 30],
-            popupAnchor:  [0, -7]
-        }
-      });
+      try {
+        var customIcon = L.Icon.extend({
+          options: {
+              iconSize:     [30, 30],
+              popupAnchor:  [0, -7]
+          }
+        });  
+      } catch (err){}
+      
       
       let markers = [];
 
@@ -283,13 +285,13 @@ RDF2Map.processPolygons = (store) => {
 
     // run query
     store.execute(polygonsQuery, function (err, results) {
-      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+      /*L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 50,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
           'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         id: 'mapbox.streets'
-      }).addTo(RDF2Map.map);
+      }).addTo(RDF2Map.map);*/
 
       let polygons = {};
 
@@ -354,14 +356,14 @@ RDF2Map.processPath = (store) => {
             }`;
     // run query
     store.execute(pathQuery, function (err, results) {
-      
+      /*
       L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
         maxZoom: 50,
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
           '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
           'Imagery © <a href="http://mapbox.com">Mapbox</a>',
         id: 'mapbox.streets'
-      }).addTo(RDF2Map.map);
+      }).addTo(RDF2Map.map);*/
       let paths = {};
 
       // Grouping the coordinates by polygon
