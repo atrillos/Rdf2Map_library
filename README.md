@@ -14,7 +14,7 @@ examples files you can use for RDF2Map.
 To use RDF2Map you only have to import the RDF2Map script in the HTML file where
 you want to show the map.
 
-```
+```html
 <script type="text/javascript" src="resources/rdf2map.js"></script>
 ```
 
@@ -25,7 +25,7 @@ scripts before RDF2Map since the library depends on this other libraries, you ca
 include the scripts copying them into your project or using their respective
 CDN.
 
-```
+```html
 <script type="text/javascript" src="resources/rdfstore.js"></script>
 <script type="text/javascript" src="resources/leaflet.js"></script>
 <link rel="stylesheet" type="text/css" href="resources/leaflet.css">
@@ -50,7 +50,7 @@ map if it is set to *true*, otherwise the map will accumulate the geospatial
 information.
 
 Example:
-```
+```html
 <div id="mapid" style="width: 100%; height: 80%;"></div>
 <input class='inputfile' accept='.ttl' type='file' id='file'>
 <script>
@@ -66,7 +66,7 @@ turtle information in to the map, you can also specify a *refresh* boolean
 parameter that will delete previous information to the map if it is set to *true*.
 
 Example:
-```
+```html
 <script>
   let myTurtleString = {someStringWithTurtleInformation}
   let mymap = L.map('mapid').setView([50.7374, 7.0982], 13);
@@ -84,7 +84,7 @@ homepage (<http://xmlns.com/foaf/0.1/homepage>)) if the geospatial concept have 
 
 Example:
 
-```
+```javascript
 let mySubjectArray = [
     'http://dbpedia.org/resource/Germany',
     'http://dbpedia.org/resource/Colombia',
@@ -102,7 +102,7 @@ in a list.
 
 Example:
 
-```
+```javascript
 RDF2Map.processPoints(myStore)
   .then((myPointsMarkersList) => {
       // do something
@@ -117,7 +117,7 @@ in a list.
 
 Example:
 
-```
+```javascript
 RDF2Map.processIcons(myStore)
   .then((myIconsMarkersList) => {
       // do something
@@ -132,7 +132,7 @@ in a list.
 
 Example:
 
-```
+```javascript
 RDF2Map.processPolygons(myStore)
   .then((myPolygonsMarkersList) => {
       // do something
@@ -147,7 +147,7 @@ in a list.
 
 Example:
 
-```
+```javascript
 RDF2Map.processPaths(myStore)
   .then((myPathsMarkersList) => {
       // do something
@@ -159,7 +159,7 @@ RDF2Map.processPaths(myStore)
 RDF2Map comes with a set of functional tests built in mocha. To run them please
 install all the node dependencies first:
 
-```
+```shell
 npm install
 ```
 
