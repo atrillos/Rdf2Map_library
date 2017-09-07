@@ -168,7 +168,7 @@ In general, RDF2Map is able to work with any Turtle Files, but since
 @prefix ex: <http://example.org/> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix lgd: <http://linkedgeodata.org/ontology/> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 ex:example ngeo:Geometry geo:Point;
   foaf:name "San Cristobal";
@@ -202,8 +202,8 @@ dbr:Ghana	ngeo:Geometry	geo:Point .
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix ngeo: <http://geovocab.org/geometry#> .
 @prefix ex: <http://example.org/resources/> .
-@prefix lgd: <http://linkedgeodata.org/ontology/>.
-@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix lgd: <http://linkedgeodata.org/ontology/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dbc: <http://dbpedia.org/page/Category> .
 
 ex:Polygon1 ngeo:Geometry ngeo:Polygon;
