@@ -244,7 +244,7 @@ npm test
 
 
 
-# Contributors:
-Ana Cristina Trillos Ujueta
-Jaime Manuel Trillos Ujueta
-Luis Daniel Fernandes Rotger
+## Contributors:
+* Ana Cristina Trillos Ujueta
+* Jaime Manuel Trillos Ujueta
+* Luis Daniel Fernandes Rotger
