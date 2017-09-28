@@ -242,6 +242,8 @@ Then you can just simply execute the tests writing:
 npm test
 ```
 
+## Demo
+You can find a demo of this project [here](http://rdf2map-demo.herokuapp.com/).
 
 
 ## Contributors:
